@@ -3,7 +3,8 @@
    ========================================= */
 
 .home-root {
-    height: 100%;
+    /* min-height: calc(100vh - 114px); */
+    flex: 1;
     background-color: #f5f7fa;
     padding: 32px 0 48px;
 }
@@ -456,4 +457,46 @@
 
 .home-empty strong {
     color: #374151;
+}
+
+/* =========================================
+   SUB-MODULE TAGS  (on each card)
+   ========================================= */
+
+.card-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    margin-top: 8px;
+}
+
+.card-tag {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    padding: 2px 7px;
+    border-radius: 4px;
+    background: rgba(0, 0, 0, 0.06);
+    color: #374151;
+}
+
+/* mod-green variant (for RMS) */
+.mod-green {
+    border-top: 3px solid #16a34a;
+}
+
+.mod-green .card-icon-wrap {
+    background: #f0fdf4;
+}
+
+.mod-green .card-num {
+    color: #16a34a;
+}
+
+.mod-green .open-link {
+    color: #16a34a;
+}
+
+.mod-green:hover {
+    border-color: #16a34a;
 }

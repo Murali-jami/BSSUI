@@ -1,47 +1,65 @@
 import React, { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 import '../styles/Home.css';
 
-const MODULE_META = {
-    BSSUI: {
-        label: 'BSS Platform',
-        desc: 'Billing, subscriber management, service plans and revenue operations',
-        icon: '⚙️',
-        route: '/bss',
+// ─── Privilege ID → Top-level Module mapping ───────────────────────────────
+// If ANY of the moduleIds in privileges matches one of these sets,
+// that top-level module card is shown.
+const PRIVILEGE_MODULE_MAP = {
+    PLMN: {
+        triggerIds: ['CLC', 'CMS', 'TSG'],   // any one of these → show PLMN card
+        label: 'PLMN Services',
+        desc: 'Network configuration, subscriber and traffic management',
+        icon: '🌐',
         color: 'mod-blue',
         num: '01',
+        route: '/plmn',
     },
-    MSGUI: {
-        label: 'Messaging Gateway',
-        desc: 'SMS, USSD, MO/MT routing and messaging service configuration',
-        icon: '💬',
-        route: '/msg',
+    BILLING: {
+        triggerIds: ['RAT'],
+        label: 'Billing Management',
+        desc: 'Invoicing, rate plans, payment gateway and revenue',
+        icon: '💳',
         color: 'mod-teal',
         num: '02',
+        route: '/billing',
     },
-    HLRUI: {
-        label: 'HLR Management',
-        desc: 'Home location register, subscriber profiles and authentication',
-        icon: '📡',
-        route: '/hlr',
+    UMS: {
+        triggerIds: ['UMS'],
+        label: 'User Management System',
+        desc: 'Accounts, roles, permissions and access control',
+        icon: '👤',
         color: 'mod-amber',
         num: '03',
+        route: '/ums',
     },
-    HSSUI: {
-        label: 'HSS Management',
-        desc: 'Home subscriber server, IMS profiles and LTE authentication',
-        icon: '🔐',
-        route: '/hss',
+    ICB: {
+        triggerIds: ['ICB'],
+        label: 'InterConnect Billing',
+        desc: 'Carrier relations, settlement and traffic exchange',
+        icon: '🔁',
         color: 'mod-purple',
         num: '04',
+        route: '/icb',
     },
-    PCRFUI: {
-        label: 'PCRF & Policy',
-        desc: 'Policy control, QoS rules, data quotas and charging rules',
-        icon: '📊',
-        route: '/pcrf',
+    TMS: {
+        triggerIds: ['TMS'],
+        label: 'Trouble Ticket Management',
+        desc: 'Open issues, escalations, knowledge base and reports',
+        icon: '🎫',
         color: 'mod-coral',
         num: '05',
+        route: '/tms',
+    },
+    RMS: {
+        triggerIds: ['RMS'],
+        label: 'Roaming Management Server',
+        desc: 'Partners, CAMEL services, TAP files and coverage maps',
+        icon: '🌍',
+        color: 'mod-green',
+        num: '06',
+        route: '/rms',
     },
 };
 
@@ -50,24 +68,36 @@ const Home = () => {
     const [search, setSearch] = useState('');
     const [view, setView] = useState('grid');
 
-    // Read login data stored after successful login
-    const loginData = useMemo(() => {
-        try { return JSON.parse(sessionStorage.getItem('loginData') || '{}'); }
-        catch { return {}; }
-    }, []);
+    // Pull user data from Redux (set by authSlice on login)
+    const user = useSelector((state) => state.auth.user);
+    const userName = user?.userName || 'User';
+    const networkName = user?.networkName || 'Network';
 
-    const availableModules = loginData.modules || Object.keys(MODULE_META);
-    const networkName = loginData.networkName || 'Network';
-    const userName = loginData.userName || 'User';
+    // Extract unique moduleIds from privileges array
+    const privilegeModuleIds = useMemo(() => {
+        const privileges = user?.privileges || [];
+        return new Set(privileges.map((p) => p.moduleId));
+    }, [user]);
+
+    // Determine which top-level module cards to show
+    const visibleModules = useMemo(() => {
+        return Object.entries(PRIVILEGE_MODULE_MAP).filter(([, meta]) =>
+            meta.triggerIds.some((id) => privilegeModuleIds.has(id))
+        );
+    }, [privilegeModuleIds]);
+
+    // Which sub-module IDs the user actually has access to (for passing to sub-pages)
+    const getGrantedSubModules = (triggerIds) =>
+        triggerIds.filter((id) => privilegeModuleIds.has(id));
 
     const filtered = useMemo(() => {
         const q = search.toLowerCase();
-        return availableModules.filter((key) => {
-            const meta = MODULE_META[key];
-            if (!meta) return false;
-            return !q || meta.label.toLowerCase().includes(q) || meta.desc.toLowerCase().includes(q) || key.toLowerCase().includes(q);
-        });
-    }, [availableModules, search]);
+        if (!q) return visibleModules;
+        return visibleModules.filter(([, meta]) =>
+            meta.label.toLowerCase().includes(q) ||
+            meta.desc.toLowerCase().includes(q)
+        );
+    }, [visibleModules, search]);
 
     return (
         <div className="home-root">
@@ -79,7 +109,7 @@ const Home = () => {
                             Select a <span className="home-title-accent">module</span>
                         </h1>
                         <p className="home-subtitle">
-                            Welcome back, <strong>{userName}</strong> — {availableModules.length} modules available on <strong>{networkName}</strong>
+                            Welcome back, <strong>{userName}</strong> — {visibleModules.length} modules available on <strong>{networkName}</strong>
                         </p>
                     </div>
 
@@ -120,22 +150,22 @@ const Home = () => {
                             <circle cx="22" cy="22" r="14" stroke="currentColor" strokeWidth="2" />
                             <path d="M32 32L42 42" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
                         </svg>
-                        <p>No modules match "<strong>{search}</strong>"</p>
+                        <p>
+                            {search
+                                ? <>No modules match "<strong>{search}</strong>"</>
+                                : 'No modules assigned to your account.'}
+                        </p>
                     </div>
                 ) : (
                     <div className={`modules-container ${view === 'list' ? 'modules-list' : 'modules-grid'}`}>
-                        {filtered.map((key, idx) => {
-                            const meta = MODULE_META[key] || {
-                                label: key, desc: `${key} module`, icon: '⬡',
-                                route: `/${key.toLowerCase()}`, color: 'mod-blue',
-                                num: String(idx + 1).padStart(2, '0'),
-                            };
+                        {filtered.map(([key, meta], idx) => {
+                            const granted = getGrantedSubModules(meta.triggerIds);
                             return (
                                 <div
                                     key={key}
                                     className={`module-card ${meta.color}`}
                                     style={{ animationDelay: `${idx * 60}ms` }}
-                                    onClick={() => navigate(meta.route)}
+                                    onClick={() => navigate(meta.route, { state: { grantedSubModules: granted } })}
                                 >
                                     <div className="card-num">{meta.num}</div>
                                     <div className="card-icon-wrap">
@@ -144,11 +174,20 @@ const Home = () => {
                                     <div className="card-body">
                                         <h2 className="card-title">{meta.label}</h2>
                                         <p className="card-desc">{meta.desc}</p>
+                                        {/* Show which sub-modules are accessible */}
+                                        <div className="card-tags">
+                                            {granted.map((id) => (
+                                                <span key={id} className="card-tag">{id}</span>
+                                            ))}
+                                        </div>
                                     </div>
                                     <div className="card-footer">
                                         <button
                                             className="open-link"
-                                            onClick={(e) => { e.stopPropagation(); navigate(meta.route); }}
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                navigate(meta.route, { state: { grantedSubModules: granted } });
+                                            }}
                                         >
                                             Open module
                                             <svg viewBox="0 0 16 16" fill="none" width="14" height="14">
