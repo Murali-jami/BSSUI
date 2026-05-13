@@ -69,7 +69,13 @@ footer {
     align-items: center;
     justify-content: center;
     overflow-y: auto;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(
+    135deg,
+    #c7d2fe 0%,
+    #bfdbfe 30%,
+    #a5f3fc 65%,
+    #d9f99d 100%
+);
 }
 
 /* =========================
