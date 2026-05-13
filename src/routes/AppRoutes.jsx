@@ -1,74 +1,272 @@
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import {
+    BrowserRouter,
+    Routes,
+    Route,
+    Navigate,
+} from "react-router-dom";
+
 import { useSelector } from "react-redux";
+
 import HomeLayout from "../layouts/HomeLayout";
 import ModuleLayout from "../layouts/ModuleLayout";
 import AuthLayout from "../layouts/AuthLayout";
+import AdminLayout from "../layouts/AdminLayout";
+
 import Home from "../modules/home/pages/Home";
 import Login from "../modules/auth/pages/Login";
+import { ToastContainer } from "react-toastify";
 
-// PROTECTED ROUTE
-const ProtectedRoute = ({ children }) => {
-    const { isAuthenticated } = useSelector((state) => state.auth);
-    return isAuthenticated ? children : <Navigate to="/login" replace />;
+/* =========================
+   NETWORK MANAGEMENT SCREENS
+========================= */
+
+import NetworkManagementGrid from "../screens/NetworkManagementGrid";
+import NetworkManagement from "../screens/NetworkManagement";
+import NetworkManagementModify from "../screens/NetworkManagementModify";
+import NetworkView from "../screens/NetworkView";
+import NetworkChangePassword from "../screens/NetworkChangePassword";
+import NetworkConfigure from "../screens/NetworkConfigure";
+import NetworkMessagePage from "../screens/Networkstatus";
+import NetworkStatusCode from "../screens/NetworkStatusCode";
+import NetworkStatusModify from "../screens/NetworkStatusModify";
+
+/* =========================
+   ADMIN ROUTE
+========================= */
+
+const AdminRoute = ({ children }) => {
+
+    const {
+        isAuthenticated,
+        user,
+    } = useSelector((state) => state.auth);
+
+    // NOT LOGGED IN
+
+    if (!isAuthenticated) {
+        return <Navigate to="/login" replace />;
+    }
+
+    // NORMAL USER TRYING ADMIN
+
+    if (user?.networkId !== 0) {
+        return <Navigate to="/home" replace />;
+    }
+
+    return children;
+};
+
+/* =========================
+   USER ROUTE
+========================= */
+
+const UserRoute = ({ children }) => {
+
+    const {
+        isAuthenticated,
+        user,
+    } = useSelector((state) => state.auth);
+
+    // NOT LOGGED IN
+
+    if (!isAuthenticated) {
+        return <Navigate to="/login" replace />;
+    }
+
+    // ADMIN TRYING USER ROUTES
+
+    if (user?.networkId === 0) {
+        return <Navigate to="/admin" replace />;
+    }
+
+    return children;
 };
 
 function AppRoutes() {
-    const { isAuthenticated } = useSelector((state) => state.auth);
+
+    const {
+        isAuthenticated,
+        user,
+    } = useSelector((state) => state.auth);
+
+    const isAdmin =
+        user?.networkId === 0;
 
     return (
+
         <BrowserRouter>
+
             <Routes>
+
                 {/* DEFAULT */}
+
                 <Route
                     path="/"
                     element={
                         isAuthenticated ? (
-                            <Navigate to="/home" replace />
+                            isAdmin
+                                ? <Navigate to="/admin" replace />
+                                : <Navigate to="/home" replace />
                         ) : (
                             <Navigate to="/login" replace />
                         )
                     }
                 />
 
-                {/* AUTH */}
+                {/* LOGIN */}
+
                 <Route element={<AuthLayout />}>
+
                     <Route
                         path="/login"
                         element={
-                            isAuthenticated ? <Navigate to="/home" replace /> : <Login />
+                            isAuthenticated ? (
+                                isAdmin
+                                    ? <Navigate to="/admin" replace />
+                                    : <Navigate to="/home" replace />
+                            ) : (
+                                <Login />
+                            )
                         }
                     />
+
                 </Route>
 
-                {/* HOME */}
-                <Route
-                    element={
-                        <ProtectedRoute>
-                            <HomeLayout />
-                        </ProtectedRoute>
-                    } >
-                    <Route path="/home" element={<Home />} />
-                </Route>
+                {/* ADMIN ROUTES */}
 
-                {/* MODULES */}
                 <Route
+                    path="/admin"
                     element={
-                        <ProtectedRoute>
-                            <ModuleLayout />
-                        </ProtectedRoute>
+                        <AdminRoute>
+                            <AdminLayout />
+                        </AdminRoute>
                     }
                 >
-                    <Route path="/plmn" element={<div>PLMN</div>} />
+
+                    {/* DEFAULT ADMIN PAGE */}
+
+                    <Route
+                        index
+                        element={<NetworkManagementGrid />}
+                    />
+
+                    {/* NETWORK MANAGEMENT */}
+
+                    <Route
+                        path="networkmanagementgrid"
+                        element={<NetworkManagementGrid />}
+                    />
+
+                    <Route
+                        path="networkmanagement"
+                        element={<NetworkManagement />}
+                    />
+
+                    <Route
+                        path="networkmanagementmodify/:networkId"
+                        element={<NetworkManagementModify />}
+                    />
+
+                    <Route
+                        path="network-view/:networkId"
+                        element={<NetworkView />}
+                    />
+
+                    <Route
+                        path="networkchangepassword/:networkId"
+                        element={<NetworkChangePassword />}
+                    />
+
+                    <Route
+                        path="network-configure/:networkId/:networkName"
+                        element={<NetworkConfigure />}
+                    />
+
+                    {/* STATUS / RESULT SCREENS */}
+
+                    <Route
+                        path="network-status"
+                        element={<NetworkMessagePage />}
+                    />
+
+                    <Route
+                        path="network-status-code"
+                        element={<NetworkStatusCode />}
+                    />
+
+                    <Route
+                        path="network-statusmodify"
+                        element={<NetworkStatusModify />}
+                    />
+
+                </Route>
+
+                {/* USER HOME */}
+
+                <Route
+                    element={
+                        <UserRoute>
+                            <HomeLayout />
+                        </UserRoute>
+                    }
+                >
+
+                    <Route
+                        path="/home"
+                        element={<Home />}
+                    />
+
+                </Route>
+
+                {/* USER MODULES */}
+
+                <Route
+                    element={
+                        <UserRoute>
+                            <ModuleLayout />
+                        </UserRoute>
+                    }
+                >
+
+                    <Route
+                        path="/plmn"
+                        element={<div>PLMN</div>}
+                    />
+
                 </Route>
 
                 {/* FALLBACK */}
+
                 <Route
                     path="*"
                     element={
-                        <Navigate to={isAuthenticated ? "/home" : "/login"} replace />
+                        <Navigate
+                            to={
+                                isAuthenticated
+                                    ? (
+                                        isAdmin
+                                            ? "/admin"
+                                            : "/home"
+                                    )
+                                    : "/login"
+                            }
+                            replace
+                        />
                     }
                 />
+
             </Routes>
+
+            <ToastContainer
+        position="top-right"
+        autoClose={3000}
+        hideProgressBar={false}
+        closeOnClick
+        pauseOnHover
+        draggable
+        theme="colored"
+      />
+
         </BrowserRouter>
     );
 }
