@@ -42,7 +42,7 @@ const NetworkView = () => {
   }, [error]);
 
   const handleBack = () => {
-    navigate('/networkmanagementgrid');
+    navigate('/admin/networkmanagementgrid');
   };
 
   if (loading) {

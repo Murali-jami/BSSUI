@@ -32,7 +32,7 @@ const NetworkStatusCode = () => {
       : 'Failed to update network status. Please try again.');
 
   const handleGoHome = () => {
-    navigate('/networkmanagementgrid');
+    navigate('/admin/networkmanagementgrid');
   };
 
   return (

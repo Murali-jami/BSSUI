@@ -46,7 +46,7 @@ const NetworkMessagePage = () => {
 
           <div style={{ display: 'flex', gap: '16px', justifyContent: 'center', flexWrap: 'wrap' }}>
             <button
-              onClick={() => navigate('/networkmanagementgrid')}
+              onClick={() => navigate('/admin/networkmanagementgrid')}
               className="button button-cancel"
               style={{ minWidth: '140px' }}
             >
@@ -54,7 +54,7 @@ const NetworkMessagePage = () => {
             </button>
 
             <button
-              onClick={() => navigate('/networkmanagement')} // or wherever your create form is
+              onClick={() => navigate('/admin/networkmanagement')} // or wherever your create form is
               className="button button-submit"
               style={{ minWidth: '160px' }}
             >

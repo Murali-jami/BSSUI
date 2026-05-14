@@ -12,24 +12,34 @@ async function getApiConfig() {
   if (!cachedConfigPromise) cachedConfigPromise = loadConfig();
   return cachedConfigPromise;
 }
-//const API_URL = 'http://10.10.19.157:8092/api/networkConfig';
-const apiConfig = await getApiConfig();
-  const API_URL = `http://${apiConfig.api.server}:${apiConfig.api.port.port_1}/api/networkConfig`;
-
 
 export const fetchNetworkConfig = createAsyncThunk(
   'networkConfig/fetchNetworkConfig',
   async ({ networkId, networkName }, { rejectWithValue }) => {
     try {
+
+      // Load config here
+      const apiConfig = await getApiConfig();
+
+      const API_URL = `http://${apiConfig.api.server}:${apiConfig.api.port.port_1}/api/networkConfig`;
+
       const res = await fetch(API_URL, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ networkId: Number(networkId), networkName }),
+        body: JSON.stringify({
+          networkId: Number(networkId),
+          networkName
+        }),
       });
 
-      if (!res.ok) throw new Error('Network config fetch failed');
+      if (!res.ok) {
+        throw new Error('Network config fetch failed');
+      }
+
       const data = await res.json();
+
       return data;
+
     } catch (err) {
       return rejectWithValue(err.message);
     }

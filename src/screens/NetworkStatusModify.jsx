@@ -46,7 +46,7 @@ const NetworkMessagePage = () => {
 
           <div style={{ display: 'flex', gap: '16px', justifyContent: 'center', flexWrap: 'wrap' }}>
             <button
-              onClick={() => navigate('/networkmanagementgrid')}
+              onClick={() => navigate('/admin/networkmanagementgrid')}
               className="button button-cancel"
               style={{ minWidth: '140px' }}
             >
