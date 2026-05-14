@@ -1,51 +1,9 @@
-// import { Outlet } from "react-router-dom";
-// import Header from "../components/common/Header";
-// import Footer from "../components/common/Footer";
-// import "../styles/layout.css";
-
-// function AdminLayout() {
-//     return (
-//         <div className="admin-layout">
-//             {/* Header */}
-//             <Header />
-
-//             {/* Main Layout */}
-//             <div className="admin-body">
-
-//                 {/* Sidebar */}
-//                 <aside className="admin-sidebar">
-//                     <nav className="sidebar-menu">
-//                         <ul>
-//                             <li className="active">
-//                                 <span className="menu-icon">🌐</span>
-//                                 <span>Network Management</span>
-//                             </li>
-//                         </ul>
-//                     </nav>
-//                 </aside>
-
-//                 {/* Content Area */}
-//                 <main className="admin-content">
-//                     <div className="content-wrapper">
-//                         <Outlet />
-//                     </div>
-//                 </main>
-//             </div>
-
-//             {/* Footer */}
-//             <Footer />
-//         </div>
-//     );
-// }
-
-// export default AdminLayout;
-
 import { Outlet, useNavigate, useLocation } from "react-router-dom";
 
 import Header from "../components/common/Header";
 import Footer from "../components/common/Footer";
 
-import "../styles/layout.css";
+import styles from "../styles/Layout.module.css";
 
 function AdminLayout() {
 
@@ -55,28 +13,25 @@ function AdminLayout() {
 
     return (
 
-        <div className="admin-layout">
+        <div className={styles.adminLayout}>
 
             {/* Header */}
-
             <Header />
 
             {/* Main Layout */}
-
-            <div className="admin-body">
+            <div className={styles.adminBody}>
 
                 {/* Sidebar */}
+                <aside className={styles.adminSidebar}>
 
-                <aside className="admin-sidebar">
-
-                    <nav className="sidebar-menu">
+                    <nav className={styles.sidebarMenu}>
 
                         <ul>
 
                             <li
                                 className={
                                     location.pathname.includes("/network")
-                                        ? "active"
+                                        ? styles.active
                                         : ""
                                 }
                                 onClick={() =>
@@ -84,7 +39,7 @@ function AdminLayout() {
                                 }
                             >
 
-                                <span className="menu-icon">
+                                <span className={styles.menuIcon}>
                                     🌐
                                 </span>
 
@@ -101,10 +56,9 @@ function AdminLayout() {
                 </aside>
 
                 {/* Content Area */}
+                <main className={styles.adminContent}>
 
-                <main className="admin-content">
-
-                    <div className="content-wrapper">
+                    <div className={styles.contentWrapper}>
 
                         <Outlet />
 
@@ -115,7 +69,6 @@ function AdminLayout() {
             </div>
 
             {/* Footer */}
-
             <Footer />
 
         </div>

@@ -8,7 +8,7 @@ import App from "./App.jsx";
 
 import { AppProvider } from "./contexts/AppContext";
 
-import "./styles/layout.css";
+import "./styles/layout.module.css";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
