@@ -50,8 +50,8 @@ const initialState = {
   data: null,           // networkDetails[0]
   airtimeCalendars: [],
   pstnCalendars: [],
-  statusCode:"",
-  networkCode:null,
+  statusCode: "",
+  networkCode: null,
   status: 'idle',       // idle | loading | succeeded | failed
   error: null,
 };
@@ -75,8 +75,8 @@ const networkConfigSlice = createSlice({
       .addCase(fetchNetworkConfig.fulfilled, (state, action) => {
         state.status = 'succeeded';
         state.data = action.payload.networkDetails?.[0] || {};
-        state.statusCode=action.payload.statusCode || {};
-        state.networkCode=action.payload.networkCode|| {};
+        state.statusCode = action.payload.statusCode || {};
+        state.networkCode = action.payload.networkCode || {};
         state.airtimeCalendars = action.payload.airtimeCalendars || [];
         state.pstnCalendars = action.payload.pstnCalendars || [];
       })

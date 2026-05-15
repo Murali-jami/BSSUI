@@ -1,43 +1,46 @@
 /* FormField Styles */
 .form-field {
-  margin-bottom: 15px;
-  display: flex;
-  flex-direction: column;
+    margin-bottom: 15px;
+    display: flex;
+    flex-direction: column;
 }
 
 .form-label {
-  margin-bottom: 5px;
-  /* font-weight: bold; */
-  color: black;
-  font-size: 13px;
+    margin-bottom: 5px;
+    /* font-weight: bold; */
+    color: black;
+    font-size: 13px;
 }
 
 .form-input,
 .form-select,
 .form-textarea {
-  padding: 10px;
-  border: 1px solid #ccc;
-  /* border-radius: 5px; */
-  font-size: 13px;
-  width: 100%; /* Ensure inputs take full width of their container */
-  box-sizing: border-box; /* Include padding and border in element's total width and height */
+    padding: 10px;
+    border: 1px solid #ccc;
+    /* border-radius: 5px; */
+    font-size: 13px;
+    width: 100%;
+    /* Ensure inputs take full width of their container */
+    box-sizing: border-box;
+    /* Include padding and border in element's total width and height */
 }
 
 .input-wrapper {
-  position: relative;
-  width: 100%;
+    position: relative;
+    width: 100%;
 }
 
 .input-wrapper.has-icon .form-input {
-  padding-left: 30px; /* Make space for icon */
+    padding-left: 30px;
+    /* Make space for icon */
 }
 
 .field-icon {
-  position: absolute;
-  left: 10px;
-  top: 50%;
-  transform: translateY(-50%);
-  color: #888;
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #888;
 }
 
 .info-text {

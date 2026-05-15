@@ -274,16 +274,16 @@
 // export default AppRoutes;
 
 
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { useSelector } from "react-redux";
+import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 
+import AdminLayout from "../layouts/AdminLayout";
+import AuthLayout from "../layouts/AuthLayout";
 import HomeLayout from "../layouts/HomeLayout";
 import ModuleLayout from "../layouts/ModuleLayout";
-import AuthLayout from "../layouts/AuthLayout";
-import AdminLayout from "../layouts/AdminLayout";
 
-import Home from "../modules/home/pages/Home";
 import Login from "../modules/auth/pages/Login";
+import Home from "../modules/home/pages/Home";
 
 import { ToastContainer } from "react-toastify";
 
@@ -291,15 +291,30 @@ import { ToastContainer } from "react-toastify";
    NETWORK MANAGEMENT SCREENS
 ========================= */
 
-import NetworkManagementGrid from "../screens/NetworkManagementGrid";
-import NetworkManagement from "../screens/NetworkManagement";
-import NetworkManagementModify from "../screens/NetworkManagementModify";
-import NetworkView from "../screens/NetworkView";
 import NetworkChangePassword from "../screens/NetworkChangePassword";
 import NetworkConfigure from "../screens/NetworkConfigure";
+import NetworkManagement from "../screens/NetworkManagement";
+import NetworkManagementGrid from "../screens/NetworkManagementGrid";
+import NetworkManagementModify from "../screens/NetworkManagementModify";
 import NetworkMessagePage from "../screens/Networkstatus";
 import NetworkStatusCode from "../screens/NetworkStatusCode";
 import NetworkStatusModify from "../screens/NetworkStatusModify";
+import NetworkView from "../screens/NetworkView";
+
+/* =========================
+   USER MANAGEMENT SCREENS
+========================= */
+
+import CreateRole from "../modules/userManagement/pages/CreateRole";
+import ModifyRole from "../modules/userManagement/pages/ModifyRole";
+import ModifyUserInfo from "../modules/userManagement/pages/ModifyUserInfo";
+import RoleCreationStatus from "../modules/userManagement/pages/RoleCreationStatus";
+import RoleManagement from "../modules/userManagement/pages/RoleManagement";
+import RoleModifyStatus from "../modules/userManagement/pages/RoleModifyStatus";
+import UserManagementGrid from "../modules/userManagement/pages/UserManagementGrid";
+import UserManagementScreen from "../modules/userManagement/pages/UserManagementScreen";
+import ViewRole from "../modules/userManagement/pages/ViewRole";
+import ViewUserInfoPage from "../modules/userManagement/pages/ViewUserInfoPage";
 
 /* =========================
    ADMIN ROUTE
@@ -461,8 +476,17 @@ function AppRoutes() {
 
                     {/* UMS */}
 
-                    <Route path="/ums" element={<Navigate to="/ums/main" replace />} />
-                    <Route path="/ums/main" element={<PlaceholderPage title="User Management System" />} />
+                    <Route path="/ums" element={<Navigate to="/ums/users" replace />} />
+                    <Route path="/ums/users" element={<UserManagementGrid />} />
+                    <Route path="/ums/create-user" element={<UserManagementScreen />} />
+                    <Route path="/ums/modify-user/:id" element={<ModifyUserInfo />} />
+                    <Route path="/ums/view-user/:id" element={<ViewUserInfoPage />} />
+                    <Route path="/ums/roles" element={<RoleManagement />} />
+                    <Route path="/ums/create-role" element={<CreateRole />} />
+                    <Route path="/ums/modify-role/:id" element={<ModifyRole />} />
+                    <Route path="/ums/view-role/:id" element={<ViewRole />} />
+                    <Route path="/ums/role-create-status" element={<RoleCreationStatus />} />
+                    <Route path="/ums/role-modify-status" element={<RoleModifyStatus />} />
 
                     {/* ICB */}
 

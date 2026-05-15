@@ -103,17 +103,26 @@ const NetworkView = () => {
   return (
     <div className={styles.screenLayoutUser}>
       <div className={styles.screenContainerUserManagement}>
-        
 
-        <h2 className="screen-title">
-          {getLabel('networkmanagementmodify.networkviewtitle') }
-        </h2>
+  {/* ── Fixed header: title + back button ── */}
+  <div className={styles.cardHeader}>
+    <h2 className="screen-title">
+      {getLabel('networkmanagementmodify.networkviewtitle')}
+    </h2>
+    <button onClick={handleBack} className={styles.backBtn}>
+      Back to Network List
+    </button>
+  </div>
 
-        {/* ────────────────────────────── */}
+  {/* ── Scrollable content body ── */}
+  <div className={styles.cardBody}>
+   
+   
+    {/* ────────────────────────────── */}
         {/* General Information */}
         {/* ────────────────────────────── */}
         <div className={styles.section}>
-         
+
           <div className={styles.detailGrid}>
             <div className={styles.detailItem}>
               <span className={styles.label}>{getLabel('networkmanagementmodify.networkName')}</span>
@@ -152,16 +161,16 @@ const NetworkView = () => {
               <span className={styles.value}>{network.browserDisplay || '-'}</span>
             </div>
 
-            
+
           </div>
         </div>
 
-        
+
         {/* ────────────────────────────── */}
         {/* IMSI & Login Settings */}
         {/* ────────────────────────────── */}
         <div className={styles.section}>
-          
+
           <div className={styles.detailGrid}>
             <div className={styles.detailItemFull}>
               <span className={styles.label}>{getLabel('networkmanagementmodify.imsiPrefix')}</span>
@@ -188,7 +197,7 @@ const NetworkView = () => {
               <span className={styles.value}>{formatNumber(network.smsThreshold)}</span>
             </div>
 
-             <div className={styles.detailItem}>
+            <div className={styles.detailItem}>
               <span className={styles.label}>{getLabel('networkmanagementmodify.voucherPrefix')}</span>
               <span className={styles.value}>{network.voucherPrefix || '-'}</span>
             </div>
@@ -211,10 +220,10 @@ const NetworkView = () => {
         {/* Voucher & PIN */}
         {/* ────────────────────────────── */}
         <div className={styles.section}>
-         
+
           <div className={styles.detailGrid}>
-           
-            
+
+
             <div className={styles.detailItem}>
               <span className={styles.label}>{getLabel('networkmanagementmodify.supplyCharge4')}</span>
               <span className={styles.value}>{network.supplyCharge4 || '-'}</span>
@@ -241,9 +250,9 @@ const NetworkView = () => {
         {/* CAMEL & Emergency Settings */}
         {/* ────────────────────────────── */}
         <div className={styles.section}>
-          
+
           <div className={styles.detailGrid}>
-            
+
             <div className={styles.detailItem}>
               <span className={styles.label}>{getLabel('networkmanagementmodify.g2BalanceRetention')}</span>
               <span className={styles.value}>{formatYesNo(network.g2BalanceRetention)}</span>
@@ -283,7 +292,7 @@ const NetworkView = () => {
               </span>
             </div>
 
-             <div className={styles.detailItem}>
+            <div className={styles.detailItem}>
               <span className={styles.label}>{getLabel('networkmanagementmodify.domainName')}</span>
               <span className={styles.value}>{network.domainName || '-'}</span>
             </div>
@@ -298,9 +307,9 @@ const NetworkView = () => {
         {/* VOIP & Ring Tones */}
         {/* ────────────────────────────── */}
         <div className={styles.section}>
-         
+
           <div className={styles.detailGrid}>
-           
+
             <div className={styles.detailItem}>
               <span className={styles.label}>{getLabel('networkmanagementmodify.sipGroupId')}</span>
               <span className={styles.value}>{formatNumber(network.sipGroupId)}</span>
@@ -324,7 +333,7 @@ const NetworkView = () => {
         {/* Low Balance Notification */}
         {/* ────────────────────────────── */}
         <div className={styles.section}>
-          
+
           <div className={styles.detailGrid}>
             <div className={styles.detailItem}>
               <span className={styles.label}>{getLabel('networkmanagementmodify.firstThreshold')}</span>
@@ -341,7 +350,7 @@ const NetworkView = () => {
           </div>
         </div>
 
-       
+
 
         {/* ────────────────────────────── */}
         {/* SimUpload & UI Access */}
@@ -365,7 +374,7 @@ const NetworkView = () => {
               <div className={styles.uiAccessGrid}>
                 <label className={styles.checkboxItem}>
                   <input type="checkbox" checked={network.bssui === 'Y'} readOnly disabled />
-                 {getLabel('networkmanagementmodify.bssUiEnabled')}
+                  {getLabel('networkmanagementmodify.bssUiEnabled')}
                 </label>
                 <label className={styles.checkboxItem}>
                   <input type="checkbox" checked={network.hlrui === 'Y'} readOnly disabled />
@@ -388,14 +397,11 @@ const NetworkView = () => {
           </div>
         </div>
 
+    ...
+  </div>
 
-        <div className={styles.footer}>
-          <button onClick={handleBack} className={styles.backBtn}>
-            Back to Network List
-          </button>
-        </div>
-      </div>
-    </div>
+</div>
+</div>
   );
 };
 

@@ -17,14 +17,60 @@ import {
 } from '../store/slices/networkConfigSubmitSlice';
 import styles from '../CssModules/NetworkConfig.module.css';
 
+// ─── Sub-components defined OUTSIDE the main component ───
+// This prevents React from unmounting/remounting them on every
+// state change, which was causing input fields to lose focus.
+
+const YesNo = ({ name, value, onRadioChange }) => (
+  <div className={styles.radioGroup}>
+    <label>
+      <input type="radio" checked={value === 'Yes'} onChange={() => onRadioChange(name, 'Yes')} />
+      Yes
+    </label>
+    <label>
+      <input type="radio" checked={value === 'No'} onChange={() => onRadioChange(name, 'No')} />
+      No
+    </label>
+  </div>
+);
+
+const YesNoService = ({ name, value, onRadioChange }) => (
+  <div className={styles.radioGroup}>
+    {['Yes', 'No', 'Service Numbers'].map(opt => (
+      <label key={opt}>
+        <input type="radio" checked={value === opt} onChange={() => onRadioChange(name, opt)} />
+        {opt}
+      </label>
+    ))}
+  </div>
+);
+
+const CalendarSelect = ({ name, value, airtimeCalendars, onChange }) => (
+  <select name={name} value={value} onChange={onChange} className={styles.selectField}>
+    <option value="">Select</option>
+    {airtimeCalendars?.map(cal => (
+      <option key={cal.calendar_id} value={cal.calendar_id}>
+        {cal.calendar_name}
+      </option>
+    ))}
+  </select>
+);
+
+const Row = ({ label, children, className = '' }) => (
+  <div className={`${styles.fieldRow} ${className}`}>
+    <span className={styles.fieldLabel}>{label}</span>
+    <div>{children}</div>
+  </div>
+);
+
 const NetworkConfigure = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-   const { getLabel } = useAppContext();
+  const { getLabel } = useAppContext();
   const { networkId, networkName: encodedName } = useParams();
   const networkName = decodeURIComponent(encodedName || '');
 
-  const { data,networkCode,statusCode, airtimeCalendars, status, error } = useSelector((state) => state.networkConfig);
+  const { data, networkCode, statusCode, airtimeCalendars, status, error } = useSelector((state) => state.networkConfig);
 
   // ─── Submit state from separate submit slice ───
   const submitStatus = useSelector(selectSubmitStatus);
@@ -32,7 +78,7 @@ const NetworkConfigure = () => {
   const isSubmitting = useSelector(selectIsSubmitting);
   const submitSuccess = useSelector(selectSubmitSuccess);
 
-   const [formData, setFormData] = useState({});
+  const [formData, setFormData] = useState({});
 
   useEffect(() => {
     if (networkId && networkName) {
@@ -40,29 +86,29 @@ const NetworkConfigure = () => {
     }
   }, [dispatch, networkId, networkName]);
 
-//  const notifyTypeMap = {
-//   "SMS": "S",
-//   "USSD": "U",
-//   "USSD & SMS": "B",
-//   "API": "A"
-// };
+  //  const notifyTypeMap = {
+  //   "SMS": "S",
+  //   "USSD": "U",
+  //   "USSD & SMS": "B",
+  //   "API": "A"
+  // };
 
-// Add these two objects
-const notifyTypeToCode = {
-  "SMS": "S",
-  "USSD": "U",
-  "USSD & SMS": "B",
-  "API": "A"
-};
+  // Add these two objects
+  const notifyTypeToCode = {
+    "SMS": "S",
+    "USSD": "U",
+    "USSD & SMS": "B",
+    "API": "A"
+  };
 
-const codeToNotifyType = {
-  "S": "SMS",
-  "U": "USSD",
-  "B": "USSD & SMS",
-  "A": "API"
-};
+  const codeToNotifyType = {
+    "S": "SMS",
+    "U": "USSD",
+    "B": "USSD & SMS",
+    "A": "API"
+  };
 
-const formatDateForInput = (dateStr) => {
+  const formatDateForInput = (dateStr) => {
     if (!dateStr) return '';
     const [month, day, year] = dateStr.split('/');
     return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
@@ -71,14 +117,14 @@ const formatDateForInput = (dateStr) => {
     if (!data || Object.keys(data).length === 0) return;
 
     setFormData({
-      
+
       networkName: networkName,
-      networkCode:networkCode,
+      networkCode: networkCode,
       status: statusCode,
 
-      accountDeActivation: data.flag_if_bal_lessthanzero_30day  === 'Y' ? 'Yes' : 'No',
+      accountDeActivation: data.flag_if_bal_lessthanzero_30day === 'Y' ? 'Yes' : 'No',
       hlrIntegration: data.integrated_hlr_yn === 'Y' ? 'Yes' : 'No',
-      hlrHssFlag: data.integrated_hlr_hss_flag ,
+      hlrHssFlag: data.integrated_hlr_hss_flag,
       msisdnActivation: data.us_npanxx_check_required_yn === 'Y' ? 'Yes' : 'No',
       rmsIntegration: data.rms_integration_flag_yn === 'Y' ? 'Yes' : 'No',
       optionalServiceChargeFlag: data.no_rental_for_optional_service === 'Y' ? 'Yes' : 'No',
@@ -93,37 +139,37 @@ const formatDateForInput = (dateStr) => {
       messageTypeUSSD: data.treatment_types,
       messageTypeSMS: data.treatment_types,
       pseudoMsisdnFlag: data.pseudo_msisdn_part_of_ttseries === 'Y' ? 'Yes' : 'No',
-      pseudoMsisdnSeries: data.pseudo_msisdn_series_prefix?.toString() ,
-      maxTransfersPerDay: data.max_transfers_per_day?.toString() ,
-      maxAmountPerDayTransferor: data.max_amt_per_day_transferor?.toString() ,
-      maxAmountPerDayTransferee: data.max_amt_per_day_transferee?.toString() ,
-      maxSubscribersAccountsPerId: data.max_subs_accts_per_mykad_id?.toString() ,
-     
+      pseudoMsisdnSeries: data.pseudo_msisdn_series_prefix?.toString(),
+      maxTransfersPerDay: data.max_transfers_per_day?.toString(),
+      maxAmountPerDayTransferor: data.max_amt_per_day_transferor?.toString(),
+      maxAmountPerDayTransferee: data.max_amt_per_day_transferee?.toString(),
+      maxSubscribersAccountsPerId: data.max_subs_accts_per_mykad_id?.toString(),
 
-  //      lowBalanceNotifyType1: notifyTypeMap(data.lowBalNotifType),
-  // lowBalanceNotifyType2: notifyTypeMap(data.lowBalNotifType2),
 
-//   lowBalanceNotifyType1: codeToNotifyType[data.lowBalNotifType] || '',
-// lowBalanceNotifyType2: codeToNotifyType[data.lowBalNotifType2] || '',
-// ✅ Correct Low Balance Notification
+      //      lowBalanceNotifyType1: notifyTypeMap(data.lowBalNotifType),
+      // lowBalanceNotifyType2: notifyTypeMap(data.lowBalNotifType2),
+
+      //   lowBalanceNotifyType1: codeToNotifyType[data.lowBalNotifType] || '',
+      // lowBalanceNotifyType2: codeToNotifyType[data.lowBalNotifType2] || '',
+      // ✅ Correct Low Balance Notification
       lowBalanceNotifyType1: codeToNotifyType[data.low_bal_notif_type] || '',
       lowBalanceNotifyType2: codeToNotifyType[data.low_bal_notif_type2] || '',
       selfcareChangeMsisdnFreeHours: data.selfcare_changemsisdn_freehrs?.toString() || '',
-      msisdnLockMaxSecUssd: data.msisdn_tr_lock_max_sec_ussd?.toString() ,
-      msisdnLockMaxSecSelfcare: data.msisdn_tr_lock_max_sec_selfcar?.toString() ,
-      msisdnAllocationAllowedMaxHours: data.msisdn_alloc_allowed_max_hrs?.toString() ,
+      msisdnLockMaxSecUssd: data.msisdn_tr_lock_max_sec_ussd?.toString(),
+      msisdnLockMaxSecSelfcare: data.msisdn_tr_lock_max_sec_selfcar?.toString(),
+      msisdnAllocationAllowedMaxHours: data.msisdn_alloc_allowed_max_hrs?.toString(),
       ivrVmsPinResetFlag: data.ivr_password_flag_imsi_yn === 'Y' ? 'Yes' : 'No',
-      subscriberExpiryNotification: data.expiry_notification ,
-      subscriberExpiryLevelOneNotificationDays: data.expiry_level_one_notification?.toString() ,
-      subscriberExpiryLevelTwoNotificationDays: data.expiry_level_two_notification?.toString() ,
-      maximumTroubleTicketsForSubscriberPerDay: data.max_trouble_ticket_perday?.toString() ,
+      subscriberExpiryNotification: data.expiry_notification,
+      subscriberExpiryLevelOneNotificationDays: data.expiry_level_one_notification?.toString(),
+      subscriberExpiryLevelTwoNotificationDays: data.expiry_level_two_notification?.toString(),
+      maximumTroubleTicketsForSubscriberPerDay: data.max_trouble_ticket_perday?.toString(),
       fnfTerminatingRateFlag: data.fnf_terminating_rate_yn === 'Y' ? 'Yes' : 'No',
       ratingBasedOnLrnFlag: data.apply_rating_based_on_lrn_yn === 'Y' ? 'Yes' : 'No',
       aaaRadiusIntegrationFlag: data.aaa_radius_integrated_yn === 'Y' ? 'Yes' : 'No',
 
-      portedOutMaxExpiryDays: data.portd_out_expire_sub_max_days?.toString() ,
-      maxCreditAmountPerTransferSubscriber: data.max_amt_per_trans?.toString() ,
-      maxDaysProcessPortInTerminate: data.maxdays_2sendportin_terminate?.toString() ,
+      portedOutMaxExpiryDays: data.portd_out_expire_sub_max_days?.toString(),
+      maxCreditAmountPerTransferSubscriber: data.max_amt_per_trans?.toString(),
+      maxDaysProcessPortInTerminate: data.maxdays_2sendportin_terminate?.toString(),
       retainAccountInCustomerGroupFlag: data.retain_acct_in_cust_group_yn === 'Y' ? 'Yes' : 'No',
       portOutStatusFlagTransit: data.port_out_status_tr_yn === 'Y' ? 'Yes' : 'No',
       portOutStatusFlagActive: data.port_out_status_ac_yn === 'Y' ? 'Yes' : 'No',
@@ -137,16 +183,16 @@ const formatDateForInput = (dateStr) => {
       maxLinesPerCaPackage: data.max_lines_per_ca_package?.toString() || '',
       maxLinesPerCorpCaPackage: data.max_lines_per_corp_ca_package?.toString() || '',
       offnetNumbersAllowedFlag: data.offnet_allowed_flag === 'Y' ? 'Yes' : 'No',
-      maxFnfOffnetAllowed: data.max_fnf_offnet_allowed?.toString() ,
+      maxFnfOffnetAllowed: data.max_fnf_offnet_allowed?.toString(),
       maxSmsOffnetAllowed: data.max_sms_offnet_allowed?.toString() || '',
       fnfAllowSmsFlag: data.fnf_allowsms_flag === 'Y' ? 'Yes' : 'No',
       currency: data.currency || '',
-      customerName: data.customer_name ,
+      customerName: data.customer_name,
 
       allowNegativeBalanceDebit: data.allow_neg_bal_for_debitxml === 'Y' ? 'Yes' : 'No',
-      postPaidHybridAllowed:data.voucher_topup_display_yn  === 'Y' ? 'Yes' : 'No',
+      postPaidHybridAllowed: data.voucher_topup_display_yn === 'Y' ? 'Yes' : 'No',
       bucketBenefitSubscriberNotification: data.bkt_credit_notification || 'None',
-      
+
       gstApplicableDate: formatDateForInput(data.gst_applicable_date),
       gstPercentage: data.gst_percentage,
       topupAmountTaxInclusive: data.topup_amt_tax_inclusive_yn === 'Y' ? 'Yes' : 'No',
@@ -162,8 +208,8 @@ const formatDateForInput = (dateStr) => {
       allowCallsDaStatus: data.allow_calls_in_da_status === 'Y' ? 'Yes' : 'No',
       allowCallsD1Status: data.allow_calls_in_d1_status === 'Y' ? 'Yes' : 'No',
       allowCallsD2Status: data.allow_calls_in_d2_status === 'Y' ? 'Yes' : 'No',
-  
-      maxMainAccountBalanceLimit: data.max_account_balance_limit?.toString() ,
+
+      maxMainAccountBalanceLimit: data.max_account_balance_limit?.toString(),
       useBucketLevelPriority: data.allow_to_use_bucket_priority === 'Y' ? 'Yes' : 'No',
       unlimitedValidityDate: formatDateForInput(data.licence_date),
       csrAllowedPasswordChangesDay: data.csr_max_pwd_chng_allow_day?.toString() || '',
@@ -171,15 +217,15 @@ const formatDateForInput = (dateStr) => {
       allowPortedInNumberCheck: data.allow_ported_in_numb_check === 'Y' ? 'Yes' : 'No',
       numberPoolThreshold: data.free_pool_msisdn_threshold_per?.toString() || '',
     });
-     console.log("Low Balance Mapped:", {
-    lowBalanceNotifyType1: codeToNotifyType[data.low_bal_notif_type],
-    lowBalanceNotifyType2: codeToNotifyType[data.low_bal_notif_type2],  gstApplicableDate: data.gst_applicable_date, postPaidHybridAllowed:data.voucher_topup_display_yn 
-  });
-  console.log("Final formData for radios:", {
-  lowBalanceNotifyType1: formData.lowBalanceNotifyType1,
-  lowBalanceNotifyType2: formData.lowBalanceNotifyType2
-});
-    console.log("networkCode:", networkCode, "statusCode:", statusCode,"data" ,data.msisdnActivation);
+    console.log("Low Balance Mapped:", {
+      lowBalanceNotifyType1: codeToNotifyType[data.low_bal_notif_type],
+      lowBalanceNotifyType2: codeToNotifyType[data.low_bal_notif_type2], gstApplicableDate: data.gst_applicable_date, postPaidHybridAllowed: data.voucher_topup_display_yn
+    });
+    console.log("Final formData for radios:", {
+      lowBalanceNotifyType1: formData.lowBalanceNotifyType1,
+      lowBalanceNotifyType2: formData.lowBalanceNotifyType2
+    });
+    console.log("networkCode:", networkCode, "statusCode:", statusCode, "data", data.msisdnActivation);
   }, [data, networkName]);
 
 
@@ -217,52 +263,52 @@ const formatDateForInput = (dateStr) => {
   }, [submitSuccess, dispatch, navigate]);
   const buildPayload = () => ({
     networkId: Number(networkId),
-    ifBalLessThanZero30Day:formData.accountDeActivation==='Yes' ? 'Y' : 'N',
-    usNpanxxCheckRequiredYn:formData.msisdnActivation ==='Yes' ? 'Y' : 'N',
+    ifBalLessThanZero30Day: formData.accountDeActivation === 'Yes' ? 'Y' : 'N',
+    usNpanxxCheckRequiredYn: formData.msisdnActivation === 'Yes' ? 'Y' : 'N',
     integratedHlrYn: formData.hlrIntegration === 'Yes' ? 'Y' : 'N',
     npdbCheckRequiredYn: formData.npdbCheckFlag === 'Yes' ? 'Y' : 'N',
     lrnPrefixRequiredYn: formData.lrnPrefixFlag === 'Yes' ? 'Y' : 'N',
     noRentalOptionalService: formData.optionalServiceChargeFlag === 'Yes' ? 'Y' : 'N',
-    esmeChargeAmount: parseFloat(formData.esmeFlatCharge) ,
+    esmeChargeAmount: parseFloat(formData.esmeFlatCharge),
     calltypeFreesmsYn: formData.callTypeFreeSmsFlag === 'Yes' ? 'Y' : 'N',
     smsExpiryNotificationDays: parseInt(formData.smsExpiryNotificationDays),
     treatmentTypes: (formData.messageTypeIVRS ? "I" : "") +
-  (formData.messageTypeUSSD ? "U" : "") +
-  (formData.messageTypeSMS ? "S" : ""),
+      (formData.messageTypeUSSD ? "U" : "") +
+      (formData.messageTypeSMS ? "S" : ""),
     creditLimitRequiredYn: formData.creditLimitFlag === 'Yes' ? 'Y' : 'N',
     volbasedDatacallsHappyhrsYn: formData.volumeBasedDataCallFlag === 'Yes' ? 'Y' : 'N',
     rmsIntegrationFlagYn: formData.rmsIntegration === 'Yes' ? 'Y' : 'N',
 
     pseudoMsisdnPartOfTtseries: formData.pseudoMsisdnFlag === 'Yes' ? 'Y' : 'N',
     pseudoMsisdnSeriesPrefix: formData.pseudoMsisdnSeries || '',
-    maxTransfersPerDay: parseInt(formData.maxTransfersPerDay) ,
-    maxAmtPerDayTransferor: parseFloat(formData.maxAmountPerDayTransferor) ,
-    maxAmtPerDayTransferee: parseFloat(formData.maxAmountPerDayTransferee) ,
-    maxSubsAcctsPerMykadId: parseInt(formData.maxSubscribersAccountsPerId) ,
+    maxTransfersPerDay: parseInt(formData.maxTransfersPerDay),
+    maxAmtPerDayTransferor: parseFloat(formData.maxAmountPerDayTransferor),
+    maxAmtPerDayTransferee: parseFloat(formData.maxAmountPerDayTransferee),
+    maxSubsAcctsPerMykadId: parseInt(formData.maxSubscribersAccountsPerId),
 
-    
-  //   lowBalNotifType: notifyTypeMap[formData.lowBalanceNotifyType1] || '',
-  // lowBalNotifType2: notifyTypeMap[formData.lowBalanceNotifyType2] || '',
 
-  lowBalNotifType: notifyTypeToCode[formData.lowBalanceNotifyType1] || '',
-lowBalNotifType2: notifyTypeToCode[formData.lowBalanceNotifyType2] || '',
-    selfcareChangemsisdnFreehrs: parseInt(formData.selfcareChangeMsisdnFreeHours) ,
-    msisdnTrLockMaxSecUssd: parseInt(formData.msisdnLockMaxSecUssd)  ,
-    msisdnTrLockMaxSecSelfcare: parseInt(formData.msisdnLockMaxSecSelfcare) ,
-    msisdnAllocAllowedMaxHrs: parseInt(formData.msisdnAllocationAllowedMaxHours) ,
+    //   lowBalNotifType: notifyTypeMap[formData.lowBalanceNotifyType1] || '',
+    // lowBalNotifType2: notifyTypeMap[formData.lowBalanceNotifyType2] || '',
+
+    lowBalNotifType: notifyTypeToCode[formData.lowBalanceNotifyType1] || '',
+    lowBalNotifType2: notifyTypeToCode[formData.lowBalanceNotifyType2] || '',
+    selfcareChangemsisdnFreehrs: parseInt(formData.selfcareChangeMsisdnFreeHours),
+    msisdnTrLockMaxSecUssd: parseInt(formData.msisdnLockMaxSecUssd),
+    msisdnTrLockMaxSecSelfcare: parseInt(formData.msisdnLockMaxSecSelfcare),
+    msisdnAllocAllowedMaxHrs: parseInt(formData.msisdnAllocationAllowedMaxHours),
 
     ivrPasswordFlagImsiYn: formData.ivrVmsPinResetFlag === 'Yes' ? 'Y' : 'N',
-    expiryLevelOneNotification: parseInt(formData.subscriberExpiryLevelOneNotificationDays) ,
+    expiryLevelOneNotification: parseInt(formData.subscriberExpiryLevelOneNotificationDays),
     expiryLevelTwoNotification: parseInt(formData.subscriberExpiryLevelTwoNotificationDays),
-    maxTroubleTicketPerday: parseInt(formData.maximumTroubleTicketsForSubscriberPerDay) ,
+    maxTroubleTicketPerday: parseInt(formData.maximumTroubleTicketsForSubscriberPerDay),
 
     fnfTerminatingRateYn: formData.fnfTerminatingRateFlag === 'Yes' ? 'Y' : 'N',
     applyRatingBasedOnLrnYn: formData.ratingBasedOnLrnFlag === 'Yes' ? 'Y' : 'N',
     aaaRadiusIntegratedYn: formData.aaaRadiusIntegrationFlag === 'Yes' ? 'Y' : 'N',
 
-    maxAmtPerTrans: parseFloat(formData.maxCreditAmountPerTransferSubscriber) ,
-    portdOutExpireSubMaxDays: parseInt(formData.portedOutMaxExpiryDays) ,
-    maxdays2sendportinTerminate: parseInt(formData.maxDaysProcessPortInTerminate) ,
+    maxAmtPerTrans: parseFloat(formData.maxCreditAmountPerTransferSubscriber),
+    portdOutExpireSubMaxDays: parseInt(formData.portedOutMaxExpiryDays),
+    maxdays2sendportinTerminate: parseInt(formData.maxDaysProcessPortInTerminate),
 
     retainAcctInCustGroupYn: formData.retainAccountInCustomerGroupFlag === 'Yes' ? 'Y' : 'N',
     portOutStatusTrYn: formData.portOutStatusFlagTransit === 'Yes' ? 'Y' : 'N',
@@ -273,11 +319,11 @@ lowBalNotifType2: notifyTypeToCode[formData.lowBalanceNotifyType2] || '',
     tenurePlanExistYn: formData.tenurePlanProcessFlag === 'Yes' ? 'Y' : 'N',
     vipNoFreepoolYn: formData.vipMsisdnVsVipOrderRetainStatus === 'Yes' ? 'Y' : 'N',
 
-    custVoiceCalid: parseInt(formData.cugDefaultVoiceCalendar) ,
-    custSmsCalid: parseInt(formData.cugDefaultSmsCalendar) ,
-    custDataCalid: parseInt(formData.cugDefaultDataCalendar) ,
+    custVoiceCalid: parseInt(formData.cugDefaultVoiceCalendar),
+    custSmsCalid: parseInt(formData.cugDefaultSmsCalendar),
+    custDataCalid: parseInt(formData.cugDefaultDataCalendar),
 
-    maxLinesPerCaPackage: parseInt(formData.maxLinesPerCaPackage) ,
+    maxLinesPerCaPackage: parseInt(formData.maxLinesPerCaPackage),
     maxLinesPerCorpCaPackage: parseInt(formData.maxLinesPerCorpCaPackage),
 
     offnetAllowedFlag: formData.offnetNumbersAllowedFlag === 'Yes' ? 'Y' : 'N',
@@ -290,20 +336,20 @@ lowBalNotifType2: notifyTypeToCode[formData.lowBalanceNotifyType2] || '',
 
     allowNegBalForDebitxml: formData.allowNegativeBalanceDebit === 'Yes' ? 'Y' : 'N',
     bktCreditNotification: formData.bucketBenefitSubscriberNotification || 'None',
-    gstPercentage: parseFloat(formData.gstPercentage) ,
+    gstPercentage: parseFloat(formData.gstPercentage),
     topupAmtTaxInclusiveYn: formData.topupAmountTaxInclusive === 'Yes' ? 'Y' : 'N',
 
     allowCallInUnknownVlr: formData.allowCallsUnknownVlr === 'Yes' ? 'Y' : 'N',
     allowCallsInG2G3G4: formData.allowCallsG2G3G4 === 'Yes' ? 'Y' :
-                        formData.allowCallsG2G3G4 === 'Service Numbers' ? 'S' : 'N',
+      formData.allowCallsG2G3G4 === 'Service Numbers' ? 'S' : 'N',
     allowRoamCallsG2G3G4: formData.allowRoamingCallsG2G3G4 === 'Yes' ? 'Y' :
-                          formData.allowRoamingCallsG2G3G4 === 'Service Numbers' ? 'S' : 'N',
+      formData.allowRoamingCallsG2G3G4 === 'Service Numbers' ? 'S' : 'N',
     allowCallsInG1Status: formData.allowCallsUnknownVlr === 'Yes' ? 'Y' :
-                          formData.allowCallsUnknownVlr === 'Service Numbers' ? 'S' : 'N',
+      formData.allowCallsUnknownVlr === 'Service Numbers' ? 'S' : 'N',
     allowRoamCallsInG1Status: formData.allowRoamingCallsG1Status === 'Yes' ? 'Y' :
-                              formData.allowRoamingCallsG1Status === 'Service Numbers' ? 'S' : 'N',
+      formData.allowRoamingCallsG1Status === 'Service Numbers' ? 'S' : 'N',
     allowCallsInTrStatus: formData.allowCallsTrStatus === 'Yes' ? 'Y' :
-                          formData.allowCallsTrStatus === 'Service Numbers' ? 'S' : 'N',
+      formData.allowCallsTrStatus === 'Service Numbers' ? 'S' : 'N',
 
     allowLocalMtCallG1Status: formData.allowLocalMtG1Status === 'Yes' ? 'Y' : 'N',
     allowLocalMoCallG1Status: formData.allowLocalMoG1Status === 'Yes' ? 'Y' : 'N',
@@ -311,25 +357,25 @@ lowBalNotifType2: notifyTypeToCode[formData.lowBalanceNotifyType2] || '',
     allowCallsInD1Status: formData.allowCallsD1Status === 'Yes' ? 'Y' : 'N',
     allowCallsInD2Status: formData.allowCallsD2Status === 'Yes' ? 'Y' : 'N',
 
-    maxAccountBalanceLimit: parseFloat(formData.maxMainAccountBalanceLimit) ,
+    maxAccountBalanceLimit: parseFloat(formData.maxMainAccountBalanceLimit),
     allowToUseBucketPriority: formData.useBucketLevelPriority === 'Yes' ? 'Y' : 'N',
-    csrMaxPwdChngAllowDay: parseInt(formData.csrAllowedPasswordChangesDay) ,
+    csrMaxPwdChngAllowDay: parseInt(formData.csrAllowedPasswordChangesDay),
 
     allowPortedInNumbCheck: formData.allowPortedInNumberCheck === 'Yes' ? 'Y' : 'N',
-    freePoolMdnThresholdPer: parseFloat(formData.numberPoolThreshold) ,
-     
-    voucherTopupDisplayYn:formData.postPaidHybridAllowed  === 'Yes' ? 'Y' : 'N',
-    integratedHlrHssFlag: formData.hlrHssFlag ,
+    freePoolMdnThresholdPer: parseFloat(formData.numberPoolThreshold),
+
+    voucherTopupDisplayYn: formData.postPaidHybridAllowed === 'Yes' ? 'Y' : 'N',
+    integratedHlrHssFlag: formData.hlrHssFlag,
   });
 
 
   useEffect(() => {
-  console.log("FormData Low Balance → ", {
-    lowBalanceNotifyType1: formData.lowBalanceNotifyType1,
-    lowBalanceNotifyType2: formData.lowBalanceNotifyType2,
-    voucherTopupDisplayYn:formData.postPaidHybridAllowed,
-  });
-}, [formData]);
+    console.log("FormData Low Balance → ", {
+      lowBalanceNotifyType1: formData.lowBalanceNotifyType1,
+      lowBalanceNotifyType2: formData.lowBalanceNotifyType2,
+      voucherTopupDisplayYn: formData.postPaidHybridAllowed,
+    });
+  }, [formData]);
   const handleSubmit = (e) => {
     e.preventDefault();
 
@@ -434,8 +480,8 @@ lowBalNotifType2: notifyTypeToCode[formData.lowBalanceNotifyType2] || '',
     }
 
     // Max Trouble Tickets
-    if (formData.maximumTroubleTicketsForSubscriberPerDay !== "" && 
-        !isPositiveNumber(formData.maximumTroubleTicketsForSubscriberPerDay)) {
+    if (formData.maximumTroubleTicketsForSubscriberPerDay !== "" &&
+      !isPositiveNumber(formData.maximumTroubleTicketsForSubscriberPerDay)) {
       showError("Please enter a valid Maximum Trouble Tickets for Subscriber Per Day.");
       return;
     }
@@ -452,8 +498,8 @@ lowBalNotifType2: notifyTypeToCode[formData.lowBalanceNotifyType2] || '',
     }
 
     // Max Credit Amount Per Transfer
-    if (formData.maxCreditAmountPerTransferSubscriber !== "" && 
-        !isPositiveRealValue(formData.maxCreditAmountPerTransferSubscriber, 7, 4)) {
+    if (formData.maxCreditAmountPerTransferSubscriber !== "" &&
+      !isPositiveRealValue(formData.maxCreditAmountPerTransferSubscriber, 7, 4)) {
       showError("Please enter valid Max credit amount per transfer");
       return;
     }
@@ -546,48 +592,6 @@ lowBalNotifType2: notifyTypeToCode[formData.lowBalanceNotifyType2] || '',
   if (status === 'loading') return <div className={styles.loading}>Loading network configuration...</div>;
   if (status === 'failed') return <div className={styles.errorMsg}>Error loading data: {error}</div>;
 
-  const YesNo = ({ name, value }) => (
-    <div className={styles.radioGroup}>
-      <label>
-        <input type="radio" checked={value === 'Yes'} onChange={() => handleRadio(name, 'Yes')} />
-        Yes
-      </label>
-      <label>
-        <input type="radio" checked={value === 'No'} onChange={() => handleRadio(name, 'No')} />
-        No
-      </label>
-    </div>
-  );
-
-  const YesNoService = ({ name, value }) => (
-    <div className={styles.radioGroup}>
-      {['Yes', 'No', 'Service Numbers'].map(opt => (
-        <label key={opt}>
-          <input type="radio" checked={value === opt} onChange={() => handleRadio(name, opt)} />
-          {opt}
-        </label>
-      ))}
-    </div>
-  );
-
-  const CalendarSelect = ({ name, value }) => (
-    <select name={name} value={value} onChange={handleChange} className={styles.selectField}>
-      <option value="">Select</option>
-      {airtimeCalendars?.map(cal => (
-        <option key={cal.calendar_id} value={cal.calendar_id}>
-          {cal.calendar_name}
-        </option>
-      ))}
-    </select>
-  );
-
-  const Row = ({ label, children, className = '' }) => (
-    <div className={`${styles.fieldRow} ${className}`}>
-      <span className={styles.fieldLabel}>{label}</span>
-      <div>{children}</div>
-    </div>
-  );
-
   return (
     <div className={styles.screenLayoutUser}>
       <div className={styles.screenContainerUserManagement}>
@@ -608,34 +612,35 @@ lowBalNotifType2: notifyTypeToCode[formData.lowBalanceNotifyType2] || '',
           <div className={styles.formBody}>
             {/* SECTION 1 */}
             <div className={styles.sectionCard}>
-              <h2 className={styles.sectionTitle}>{getLabel('NetworkConfiguration.title') }</h2>
+              <h2 className={styles.sectionTitle}>{getLabel('NetworkConfiguration.title')}</h2>
+              
 
-          {/* Network Info Header - clean side-by-side layout */}
-<div className={styles.metaGrid}>
-  <div className={styles.metaItem}>
-    <div className={styles.metaLabel}>{getLabel('NetworkConfiguration.networkName') }</div>
-    <div className={styles.metaValue}>{formData.networkName || '—'}</div>
-  </div>
+              {/* Network Info Header - clean side-by-side layout */}
+              <div className={styles.metaGrid}>
+                <div className={styles.metaItem}>
+                  <div className={styles.metaLabel}>{getLabel('NetworkConfiguration.networkName')}</div>
+                  <div className={styles.metaValue}>{formData.networkName || '—'}</div>
+                </div>
 
-  <div className={styles.metaItem}>
-    <div className={styles.metaLabel}>{getLabel('NetworkConfiguration.networkCode') }</div>
-    <div className={styles.metaValue}>{formData.networkCode || '—'}</div>
-  </div>
+                <div className={styles.metaItem}>
+                  <div className={styles.metaLabel}>{getLabel('NetworkConfiguration.networkCode')}</div>
+                  <div className={styles.metaValue}>{formData.networkCode || '—'}</div>
+                </div>
 
-  <div className={styles.metaItem}>
-    <div className={styles.metaLabel}>{getLabel('NetworkConfiguration.Status') }</div>
-    <div className={`${styles.metaValue} ${styles.metaValueActive}`}>
-      {formData.status || '—'}
-    </div>
- 
-</div>
+                <div className={styles.metaItem}>
+                  <div className={styles.metaLabel}>{getLabel('NetworkConfiguration.Status')}</div>
+                  <div className={`${styles.metaValue} ${styles.metaValueActive}`}>
+                    {formData.status || '—'}
+                  </div>
+
+                </div>
               </div>
 
-              <Row label={getLabel('NetworkConfiguration.AccountDeActivation') }>
-                <YesNo name="accountDeActivation" value={formData.accountDeActivation} />
+              <Row label={getLabel('NetworkConfiguration.AccountDeActivation')}>
+                <YesNo name="accountDeActivation" value={formData.accountDeActivation} onRadioChange={handleRadio} />
               </Row>
-              <Row label={getLabel('NetworkConfiguration.HLRIntegration') }>
-                <YesNo name="hlrIntegration" value={formData.hlrIntegration} />
+              <Row label={getLabel('NetworkConfiguration.HLRIntegration')}>
+                <YesNo name="hlrIntegration" value={formData.hlrIntegration} onRadioChange={handleRadio} />
               </Row>
               <Row label={getLabel('NetworkConfiguration.Hlr_Hss_Flag')}>
                 <select name="hlrHssFlag" value={formData.hlrHssFlag} onChange={handleChange} className={styles.selectField}>
@@ -645,30 +650,30 @@ lowBalNotifType2: notifyTypeToCode[formData.lowBalanceNotifyType2] || '',
                 </select>
               </Row>
               <Row label={getLabel('NetworkConfiguration.MSISDNActivation')}>
-                <YesNo name="msisdnActivation" value={formData.msisdnActivation} />
+                <YesNo name="msisdnActivation" value={formData.msisdnActivation} onRadioChange={handleRadio} />
               </Row>
               <Row label={getLabel('NetworkConfiguration.RMSIntegration')}>
-                <YesNo name="rmsIntegration" value={formData.rmsIntegration} />
+                <YesNo name="rmsIntegration" value={formData.rmsIntegration} onRadioChange={handleRadio} />
               </Row>
               <Row label={getLabel('NetworkConfiguration.OptionalServiceChargeFlag')}>
-                <YesNo name="optionalServiceChargeFlag" value={formData.optionalServiceChargeFlag} />
+                <YesNo name="optionalServiceChargeFlag" value={formData.optionalServiceChargeFlag} onRadioChange={handleRadio} />
               </Row>
               <Row label={getLabel('NetworkConfiguration.NPDBCheckFlag')}>
-                <YesNo name="npdbCheckFlag" value={formData.npdbCheckFlag} />
+                <YesNo name="npdbCheckFlag" value={formData.npdbCheckFlag} onRadioChange={handleRadio} />
               </Row>
               <Row label={getLabel('NetworkConfiguration.LRNPrefixFlag')}>
-                <YesNo name="lrnPrefixFlag" value={formData.lrnPrefixFlag} />
+                <YesNo name="lrnPrefixFlag" value={formData.lrnPrefixFlag} onRadioChange={handleRadio} />
               </Row>
               <Row label={getLabel('NetworkConfiguration.CallTypeFreeSMSFlag')}>
-                <YesNo name="callTypeFreeSmsFlag" value={formData.callTypeFreeSmsFlag} />
+                <YesNo name="callTypeFreeSmsFlag" value={formData.callTypeFreeSmsFlag} onRadioChange={handleRadio} />
               </Row>
               <Row label={getLabel('NetworkConfiguration.CreditLimitFlag')}>
-                <YesNo name="creditLimitFlag" value={formData.creditLimitFlag} />
+                <YesNo name="creditLimitFlag" value={formData.creditLimitFlag} onRadioChange={handleRadio} />
               </Row>
               <Row label={getLabel('NetworkConfiguration.VolumeBasedDataCallFlag')}>
-                <YesNo name="volumeBasedDataCallFlag" value={formData.volumeBasedDataCallFlag} />
+                <YesNo name="volumeBasedDataCallFlag" value={formData.volumeBasedDataCallFlag} onRadioChange={handleRadio} />
               </Row>
-              <Row label= {getLabel('NetworkConfiguration.ESMEFlatCharge(RM)')}>
+              <Row label={getLabel('NetworkConfiguration.ESMEFlatCharge(RM)')}>
                 <input
                   type="number"
                   step="0.01"
@@ -678,7 +683,7 @@ lowBalNotifType2: notifyTypeToCode[formData.lowBalanceNotifyType2] || '',
                   className={styles.inputField}
                 />
               </Row>
-              <Row label= {getLabel('NetworkConfiguration.SMSExpiryNotificationDays')}>
+              <Row label={getLabel('NetworkConfiguration.SMSExpiryNotificationDays')}>
                 <input
                   type="number"
                   name="smsExpiryNotificationDays"
@@ -725,7 +730,7 @@ lowBalNotifType2: notifyTypeToCode[formData.lowBalanceNotifyType2] || '',
               <h2 className={styles.sectionTitle}></h2>
 
               <Row label={getLabel('NetworkConfiguration.PseudoMSISDNFlag')}>
-                <YesNo name="pseudoMsisdnFlag" value={formData.pseudoMsisdnFlag} />
+                <YesNo name="pseudoMsisdnFlag" value={formData.pseudoMsisdnFlag} onRadioChange={handleRadio} />
               </Row>
               <Row label={getLabel('NetworkConfiguration.PseudoMSISDNSeries')}>
                 <input type="text" name="pseudoMsisdnSeries" value={formData.pseudoMsisdnSeries} onChange={handleChange} className={styles.inputField} />
@@ -739,44 +744,44 @@ lowBalNotifType2: notifyTypeToCode[formData.lowBalanceNotifyType2] || '',
               <Row label={getLabel('NetworkConfiguration.MaxAmountPerDayTransferee')}>
                 <input type="number" name="maxAmountPerDayTransferee" value={formData.maxAmountPerDayTransferee} onChange={handleChange} className={styles.inputField} />
               </Row>
-              <Row label= {getLabel('NetworkConfiguration.MaxSubscribersAccountsPerId')}>
+              <Row label={getLabel('NetworkConfiguration.MaxSubscribersAccountsPerId')}>
                 <input type="number" name="maxSubscribersAccountsPerId" value={formData.maxSubscribersAccountsPerId} onChange={handleChange} className={styles.inputField} />
               </Row>
-             
+
 
               <Row label={getLabel('NetworkConfiguration.LowBalanceNotifyType1')}>
-  <div className={styles.radioGroup}>
-    {["SMS", "USSD", "USSD & SMS", "API"].map((option) => (
-      <label key={option} className={styles.radioLabel}>
-        <input
-          type="radio"
-          name="lowBalanceNotifyType1"
-          value={option}
-          checked={formData.lowBalanceNotifyType1 === option}
-          onChange={handleChange}
-        />
-        {option}
-      </label>
-    ))}
-  </div>
-</Row>
+                <div className={styles.radioGroup}>
+                  {["SMS", "USSD", "USSD & SMS", "API"].map((option) => (
+                    <label key={option} className={styles.radioLabel}>
+                      <input
+                        type="radio"
+                        name="lowBalanceNotifyType1"
+                        value={option}
+                        checked={formData.lowBalanceNotifyType1 === option}
+                        onChange={handleChange}
+                      />
+                      {option}
+                    </label>
+                  ))}
+                </div>
+              </Row>
 
-<Row label={getLabel('NetworkConfiguration.LowBalanceNotifyType2')}>
-  <div className={styles.radioGroup}>
-    {["USSD", "SMS", "USSD & SMS", "API"].map((option) => (
-      <label key={option} className={styles.radioLabel}>
-        <input
-          type="radio"
-          name="lowBalanceNotifyType2"
-          value={option}
-          checked={formData.lowBalanceNotifyType2 === option}
-          onChange={handleChange}
-        />
-        {option}
-      </label>
-    ))}
-  </div>
-</Row>
+              <Row label={getLabel('NetworkConfiguration.LowBalanceNotifyType2')}>
+                <div className={styles.radioGroup}>
+                  {["USSD", "SMS", "USSD & SMS", "API"].map((option) => (
+                    <label key={option} className={styles.radioLabel}>
+                      <input
+                        type="radio"
+                        name="lowBalanceNotifyType2"
+                        value={option}
+                        checked={formData.lowBalanceNotifyType2 === option}
+                        onChange={handleChange}
+                      />
+                      {option}
+                    </label>
+                  ))}
+                </div>
+              </Row>
               <Row label={getLabel('NetworkConfiguration.SelfcareChangeMSISDNFreeHours')}>
                 <input type="number" name="selfcareChangeMsisdnFreeHours" value={formData.selfcareChangeMsisdnFreeHours} onChange={handleChange} className={styles.inputField} />
               </Row>
@@ -790,7 +795,7 @@ lowBalNotifType2: notifyTypeToCode[formData.lowBalanceNotifyType2] || '',
                 <input type="number" name="msisdnAllocationAllowedMaxHours" value={formData.msisdnAllocationAllowedMaxHours} onChange={handleChange} className={styles.inputField} />
               </Row>
               <Row label={getLabel('NetworkConfiguration.IVR/VMSPinResetFlag')}>
-                <YesNo name="ivrVmsPinResetFlag" value={formData.ivrVmsPinResetFlag} />
+                <YesNo name="ivrVmsPinResetFlag" value={formData.ivrVmsPinResetFlag} onRadioChange={handleRadio} />
               </Row>
               <Row label={getLabel('NetworkConfiguration.SubscriberExpiryNotification')}>
                 <select name="subscriberExpiryNotification" value={formData.subscriberExpiryNotification} onChange={handleChange} className={styles.selectField}>
@@ -809,13 +814,13 @@ lowBalNotifType2: notifyTypeToCode[formData.lowBalanceNotifyType2] || '',
                 <input type="number" name="maximumTroubleTicketsForSubscriberPerDay" value={formData.maximumTroubleTicketsForSubscriberPerDay} onChange={handleChange} className={styles.inputField} />
               </Row>
               <Row label={getLabel('NetworkConfiguration.FNFTerminatingRateFlag')}>
-                <YesNo name="fnfTerminatingRateFlag" value={formData.fnfTerminatingRateFlag} />
+                <YesNo name="fnfTerminatingRateFlag" value={formData.fnfTerminatingRateFlag} onRadioChange={handleRadio} />
               </Row>
               <Row label={getLabel('NetworkConfiguration.RatingBasedOnLRNFlag')}>
-                <YesNo name="ratingBasedOnLrnFlag" value={formData.ratingBasedOnLrnFlag} />
+                <YesNo name="ratingBasedOnLrnFlag" value={formData.ratingBasedOnLrnFlag} onRadioChange={handleRadio} />
               </Row>
               <Row label={getLabel('NetworkConfiguration.AAARadiusIntegrationFlag')}>
-                <YesNo name="aaaRadiusIntegrationFlag" value={formData.aaaRadiusIntegrationFlag} />
+                <YesNo name="aaaRadiusIntegrationFlag" value={formData.aaaRadiusIntegrationFlag} onRadioChange={handleRadio} />
               </Row>
             </div>
 
@@ -833,39 +838,39 @@ lowBalNotifType2: notifyTypeToCode[formData.lowBalanceNotifyType2] || '',
                 <input type="number" name="maxDaysProcessPortInTerminate" value={formData.maxDaysProcessPortInTerminate} onChange={handleChange} className={styles.inputField} />
               </Row>
               <Row label={getLabel('NetworkConfiguration.RetainAccountInCustomerGroupFlag')}>
-                <YesNo name="retainAccountInCustomerGroupFlag" value={formData.retainAccountInCustomerGroupFlag} />
+                <YesNo name="retainAccountInCustomerGroupFlag" value={formData.retainAccountInCustomerGroupFlag} onRadioChange={handleRadio} />
               </Row>
               <Row label={getLabel('NetworkConfiguration.PortOutStatusFlagForTransitStatus')}>
-                <YesNo name="portOutStatusFlagTransit" value={formData.portOutStatusFlagTransit} />
+                <YesNo name="portOutStatusFlagTransit" value={formData.portOutStatusFlagTransit} onRadioChange={handleRadio} />
               </Row>
               <Row label={getLabel('NetworkConfiguration.PortOutStatusFlagForActiveStatus')}>
-                <YesNo name="portOutStatusFlagActive" value={formData.portOutStatusFlagActive} />
+                <YesNo name="portOutStatusFlagActive" value={formData.portOutStatusFlagActive} onRadioChange={handleRadio} />
               </Row>
               <Row label={getLabel('NetworkConfiguration.PortOutStatusFlagForGracePeriodIStatus')}>
-                <YesNo name="portOutStatusFlagGraceI" value={formData.portOutStatusFlagGraceI} />
+                <YesNo name="portOutStatusFlagGraceI" value={formData.portOutStatusFlagGraceI} onRadioChange={handleRadio} />
               </Row>
               <Row label={getLabel('NetworkConfiguration.PortOutStatusFlagForGracePeriodIIStatus')}>
-                <YesNo name="portOutStatusFlagGraceII" value={formData.portOutStatusFlagGraceII} />
+                <YesNo name="portOutStatusFlagGraceII" value={formData.portOutStatusFlagGraceII} onRadioChange={handleRadio} />
               </Row>
               <Row label={getLabel('NetworkConfiguration.TenurePlanProcessFlag')}>
-                <YesNo name="tenurePlanProcessFlag" value={formData.tenurePlanProcessFlag} />
+                <YesNo name="tenurePlanProcessFlag" value={formData.tenurePlanProcessFlag} onRadioChange={handleRadio} />
               </Row>
               <Row label={getLabel('NetworkConfiguration.VipMSISDNVsVipOrderRetainStatus')}>
-                <YesNo name="vipMsisdnVsVipOrderRetainStatus" value={formData.vipMsisdnVsVipOrderRetainStatus} />
+                <YesNo name="vipMsisdnVsVipOrderRetainStatus" value={formData.vipMsisdnVsVipOrderRetainStatus} onRadioChange={handleRadio} />
               </Row>
 
               <div className={styles.calendarGrid}>
                 <div className={styles.calendarItem}>
                   <span className={styles.calendarLabel}>{getLabel('NetworkConfiguration.CUGDefaultVOICECalendar')}</span>
-                  <CalendarSelect name="cugDefaultVoiceCalendar" value={formData.cugDefaultVoiceCalendar} />
+                  <CalendarSelect name="cugDefaultVoiceCalendar" value={formData.cugDefaultVoiceCalendar} airtimeCalendars={airtimeCalendars} onChange={handleChange} />
                 </div>
                 <div className={styles.calendarItem}>
                   <span className={styles.calendarLabel}>{getLabel('NetworkConfiguration.CUGDefaultSMSCalendar')}</span>
-                  <CalendarSelect name="cugDefaultSmsCalendar" value={formData.cugDefaultSmsCalendar} />
+                  <CalendarSelect name="cugDefaultSmsCalendar" value={formData.cugDefaultSmsCalendar} airtimeCalendars={airtimeCalendars} onChange={handleChange} />
                 </div>
                 <div className={styles.calendarItem}>
                   <span className={styles.calendarLabel}>{getLabel('NetworkConfiguration.CUGDefaultDATACalendar')}</span>
-                  <CalendarSelect name="cugDefaultDataCalendar" value={formData.cugDefaultDataCalendar} />
+                  <CalendarSelect name="cugDefaultDataCalendar" value={formData.cugDefaultDataCalendar} airtimeCalendars={airtimeCalendars} onChange={handleChange} />
                 </div>
               </div>
 
@@ -876,7 +881,7 @@ lowBalNotifType2: notifyTypeToCode[formData.lowBalanceNotifyType2] || '',
                 <input type="number" name="maxLinesPerCorpCaPackage" value={formData.maxLinesPerCorpCaPackage} onChange={handleChange} className={styles.inputField} />
               </Row>
               <Row label={getLabel('NetworkConfiguration.OffnetNumbersAllowedFlag')}>
-                <YesNo name="offnetNumbersAllowedFlag" value={formData.offnetNumbersAllowedFlag} />
+                <YesNo name="offnetNumbersAllowedFlag" value={formData.offnetNumbersAllowedFlag} onRadioChange={handleRadio} />
               </Row>
               <Row label={getLabel('NetworkConfiguration.MaxFNFOffnetNumbersAllowed')}>
                 <input type="number" name="maxFnfOffnetAllowed" value={formData.maxFnfOffnetAllowed} onChange={handleChange} className={styles.inputField} />
@@ -885,7 +890,7 @@ lowBalNotifType2: notifyTypeToCode[formData.lowBalanceNotifyType2] || '',
                 <input type="number" name="maxSmsOffnetAllowed" value={formData.maxSmsOffnetAllowed} onChange={handleChange} className={styles.inputField} />
               </Row>
               <Row label={getLabel('NetworkConfiguration.FNFAllowSMSFlag')}>
-                <YesNo name="fnfAllowSmsFlag" value={formData.fnfAllowSmsFlag} />
+                <YesNo name="fnfAllowSmsFlag" value={formData.fnfAllowSmsFlag} onRadioChange={handleRadio} />
               </Row>
               <Row label={getLabel('NetworkConfiguration.Currency')}>
                 <input type="text" name="currency" value={formData.currency} onChange={handleChange} className={styles.inputField} />
@@ -900,10 +905,10 @@ lowBalNotifType2: notifyTypeToCode[formData.lowBalanceNotifyType2] || '',
               <h2 className={styles.sectionTitle}></h2>
 
               <Row label={getLabel('NetworkConfiguration.AllowNegativeBalancefordebitrequest')}>
-                <YesNo name="allowNegativeBalanceDebit" value={formData.allowNegativeBalanceDebit} />
+                <YesNo name="allowNegativeBalanceDebit" value={formData.allowNegativeBalanceDebit} onRadioChange={handleRadio} />
               </Row>
               <Row label={getLabel('NetworkConfiguration.PostPaidHybridAllowed')}>
-                <YesNo name="postPaidHybridAllowed" value={formData.postPaidHybridAllowed} />
+                <YesNo name="postPaidHybridAllowed" value={formData.postPaidHybridAllowed} onRadioChange={handleRadio} />
               </Row>
               <Row label={getLabel('NetworkConfiguration.Bucketbenefittosubscribernotification')}>
                 <select name="bucketBenefitSubscriberNotification" value={formData.bucketBenefitSubscriberNotification} onChange={handleChange} className={styles.selectField}>
@@ -914,60 +919,60 @@ lowBalNotifType2: notifyTypeToCode[formData.lowBalanceNotifyType2] || '',
                 <input type="date" name="gstApplicableDate" value={formData.gstApplicableDate} onChange={handleChange} className={styles.inputField} />
               </Row> */}
               <Row label={getLabel('NetworkConfiguration.GSTApplicableDate')}>
-  <input 
-    type="date" 
-    name="gstApplicableDate" 
-    value={formData.gstApplicableDate} 
-    onChange={handleChange} 
-    className={styles.inputField} 
-  />
-</Row>
+                <input
+                  type="date"
+                  name="gstApplicableDate"
+                  value={formData.gstApplicableDate}
+                  onChange={handleChange}
+                  className={styles.inputField}
+                />
+              </Row>
               <Row label={getLabel('NetworkConfiguration.GSTPercentage')}>
                 <input type="number" step="0.01" name="gstPercentage" value={formData.gstPercentage} onChange={handleChange} className={styles.inputField} />
               </Row>
               <Row label={getLabel('NetworkConfiguration.TopupAmountTaxInclusiveY/N')}>
-                <YesNo name="topupAmountTaxInclusive" value={formData.topupAmountTaxInclusive} />
+                <YesNo name="topupAmountTaxInclusive" value={formData.topupAmountTaxInclusive} onRadioChange={handleRadio} />
               </Row>
 
               <Row label={getLabel('NetworkConfiguration.AllowCallsinUnknownVLR')}>
-                <YesNo name="allowCallsUnknownVlr" value={formData.allowCallsUnknownVlr} />
+                <YesNo name="allowCallsUnknownVlr" value={formData.allowCallsUnknownVlr} onRadioChange={handleRadio} />
               </Row>
               <Row label={getLabel('NetworkConfiguration.AllowCallsinG2G3G4')}>
-                <YesNoService name="allowCallsG2G3G4" value={formData.allowCallsG2G3G4} />
+                <YesNoService name="allowCallsG2G3G4" value={formData.allowCallsG2G3G4} onRadioChange={handleRadio} />
               </Row>
               <Row label={getLabel('NetworkConfiguration.AllowRoamingCallsinG2G3G4')}>
-                <YesNoService name="allowRoamingCallsG2G3G4" value={formData.allowRoamingCallsG2G3G4} />
+                <YesNoService name="allowRoamingCallsG2G3G4" value={formData.allowRoamingCallsG2G3G4} onRadioChange={handleRadio} />
               </Row>
               <Row label={getLabel('NetworkConfiguration.AllowCallsinG1Status')}>
-                <YesNoService name="allowCallsG1Status" value={formData.allowCallsG1Status} />
+                <YesNoService name="allowCallsG1Status" value={formData.allowCallsG1Status} onRadioChange={handleRadio} />
               </Row>
               <Row label={getLabel('NetworkConfiguration.AllowRoamingCallsinG1Status')}>
-                <YesNoService name="allowRoamingCallsG1Status" value={formData.allowRoamingCallsG1Status} />
+                <YesNoService name="allowRoamingCallsG1Status" value={formData.allowRoamingCallsG1Status} onRadioChange={handleRadio} />
               </Row>
               <Row label={getLabel('NetworkConfiguration.AllowCallsInTRStatus')}>
-                <YesNoService name="allowCallsTrStatus" value={formData.allowCallsTrStatus} />
+                <YesNoService name="allowCallsTrStatus" value={formData.allowCallsTrStatus} onRadioChange={handleRadio} />
               </Row>
               <Row label={getLabel('NetworkConfiguration.AllowLocalMTCallsInG1Status')}>
-                <YesNo name="allowLocalMtG1Status" value={formData.allowLocalMtG1Status} />
+                <YesNo name="allowLocalMtG1Status" value={formData.allowLocalMtG1Status} onRadioChange={handleRadio} />
               </Row>
               <Row label={getLabel('NetworkConfiguration.AllowLocalMOCallsInG1Status')}>
-                <YesNo name="allowLocalMoG1Status" value={formData.allowLocalMoG1Status} />
+                <YesNo name="allowLocalMoG1Status" value={formData.allowLocalMoG1Status} onRadioChange={handleRadio} />
               </Row>
               <Row label={getLabel('NetworkConfiguration.AllowCallsInDAStatus')}>
-                <YesNo name="allowCallsDaStatus" value={formData.allowCallsDaStatus} />
+                <YesNo name="allowCallsDaStatus" value={formData.allowCallsDaStatus} onRadioChange={handleRadio} />
               </Row>
               <Row label={getLabel('NetworkConfiguration.AllowCallsInD1Status')}>
-                <YesNo name="allowCallsD1Status" value={formData.allowCallsD1Status} />
+                <YesNo name="allowCallsD1Status" value={formData.allowCallsD1Status} onRadioChange={handleRadio} />
               </Row>
               <Row label={getLabel('NetworkConfiguration.AllowCallsInD2Status')}>
-                <YesNo name="allowCallsD2Status" value={formData.allowCallsD2Status} />
+                <YesNo name="allowCallsD2Status" value={formData.allowCallsD2Status} onRadioChange={handleRadio} />
               </Row>
 
               <Row label={getLabel('NetworkConfiguration.MaxMainAccountBalanceLimit')}>
                 <input type="number" name="maxMainAccountBalanceLimit" value={formData.maxMainAccountBalanceLimit} onChange={handleChange} className={styles.inputField} />
               </Row>
               <Row label={getLabel('NetworkConfiguration.UseBucketLevelPriority')}>
-                <YesNo name="useBucketLevelPriority" value={formData.useBucketLevelPriority} />
+                <YesNo name="useBucketLevelPriority" value={formData.useBucketLevelPriority} onRadioChange={handleRadio} />
               </Row>
               <Row label={getLabel('NetworkConfiguration.UnlimitedValidityDate')}>
                 <input type="date" name="unlimitedValidityDate" value={formData.unlimitedValidityDate} onChange={handleChange} className={styles.inputField} />
@@ -982,7 +987,7 @@ lowBalNotifType2: notifyTypeToCode[formData.lowBalanceNotifyType2] || '',
               <h2 className={styles.sectionTitle}></h2>
 
               <Row label={getLabel('NetworkConfiguration.AllowPortedInNumberCheck')}>
-                <YesNo name="allowPortedInNumberCheck" value={formData.allowPortedInNumberCheck} />
+                <YesNo name="allowPortedInNumberCheck" value={formData.allowPortedInNumberCheck} onRadioChange={handleRadio} />
               </Row>
               <Row label={getLabel('NetworkConfiguration.NumberPoolThreshold(%)')}>
                 <input type="number" step="0.01" name="numberPoolThreshold" value={formData.numberPoolThreshold} onChange={handleChange} className={styles.inputField} />
@@ -993,7 +998,7 @@ lowBalNotifType2: notifyTypeToCode[formData.lowBalanceNotifyType2] || '',
           {/* Sticky footer buttons */}
           <div className={styles.formFooter}>
             <button type="button" className={styles.btnHome} onClick={() => navigate(-1)}>
-             {getLabel('NetworkConfiguration.home')}
+              {getLabel('NetworkConfiguration.home')}
             </button>
 
             <button

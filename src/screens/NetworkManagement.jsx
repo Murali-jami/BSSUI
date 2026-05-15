@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useNavigate }                 from 'react-router-dom';
-import { useSelector, useDispatch }    from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+import { useSelector, useDispatch } from 'react-redux';
 
-import FormField           from '../components/FormField';
+import FormField from '../components/FormField';
 // import { showError, showSuccess } from '../utils/toast';
-import { useAppContext }   from '../contexts/AppContext';
-import styles              from '../CssModules/networkmodify.module.css';
+import { useAppContext } from '../contexts/AppContext';
+import styles from '../CssModules/networkmodify.module.css';
 
 // ── Redux: Countries ──────────────────────────────────────────────────────────
 import {
@@ -92,9 +92,9 @@ const INITIAL_FORM = {
 // IMSIPrefixComboBox — accepts resetKey to clear itself when parent resets
 // ═════════════════════════════════════════════════════════════════════════════
 const IMSIPrefixComboBox = ({ value = [], onChange, resetKey }) => {
-  const [inputValue,      setInputValue]      = useState('');
-  const [mappedItems,     setMappedItems]      = useState(value);
-  const [highlightedItem, setHighlightedItem]  = useState(null);
+  const [inputValue, setInputValue] = useState('');
+  const [mappedItems, setMappedItems] = useState(value);
+  const [highlightedItem, setHighlightedItem] = useState(null);
 
   // When parent triggers a reset (resetKey bumps), wipe local state
   useEffect(() => {
@@ -122,10 +122,10 @@ const IMSIPrefixComboBox = ({ value = [], onChange, resetKey }) => {
   };
 
   const css = {
-    wrapper:    { display: 'flex', alignItems: 'center', gap: '6px' },
-    input:      { width: '120px', height: '36px', padding: '0 8px', border: '1px solid #d1d5db', borderRadius: '6px', fontSize: '13px', boxSizing: 'border-box' },
+    wrapper: { display: 'flex', alignItems: 'center', gap: '6px' },
+    input: { width: '120px', height: '36px', padding: '0 8px', border: '1px solid #d1d5db', borderRadius: '6px', fontSize: '13px', boxSizing: 'border-box' },
     arrowGroup: { display: 'flex', flexDirection: 'column', gap: '4px' },
-    arrowBtn:   (dis) => ({
+    arrowBtn: (dis) => ({
       width: '26px', height: '26px', display: 'flex', alignItems: 'center',
       justifyContent: 'center', cursor: dis ? 'not-allowed' : 'pointer',
       background: dis ? '#f0f0f0' : '#e2e8f0', border: '1px solid #cbd5e1',
@@ -153,8 +153,8 @@ const IMSIPrefixComboBox = ({ value = [], onChange, resetKey }) => {
         onKeyDown={e => e.key === 'Enter' && handleMap()}
       />
       <div style={css.arrowGroup}>
-        <div style={css.arrowBtn(!inputValue.trim())} title="Add"    onClick={handleMap}>▶</div>
-        <div style={css.arrowBtn(!highlightedItem)}   title="Remove" onClick={handleUnmap}>◀</div>
+        <div style={css.arrowBtn(!inputValue.trim())} title="Add" onClick={handleMap}>▶</div>
+        <div style={css.arrowBtn(!highlightedItem)} title="Remove" onClick={handleUnmap}>◀</div>
       </div>
       <div style={css.listBox}>
         {mappedItems.map(item => (
@@ -174,25 +174,25 @@ const IMSIPrefixComboBox = ({ value = [], onChange, resetKey }) => {
 // NetworkManagement – main component
 // ═════════════════════════════════════════════════════════════════════════════
 const NetworkManagement = () => {
-  const navigate  = useNavigate();
-  const dispatch  = useDispatch();
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
   const { getLabel } = useAppContext();
 
   // resetKey: bump this to force IMSIPrefixComboBox to clear itself
   const [resetKey, setResetKey] = useState(0);
 
   // selectors
-  const countryOptions   = useSelector(selectCountryOptions);
+  const countryOptions = useSelector(selectCountryOptions);
   const countriesLoading = useSelector(selectCountriesLoading);
-  const countriesError   = useSelector(selectCountriesError);
+  const countriesError = useSelector(selectCountriesError);
 
-  const states        = useSelector(selectStatesData);
+  const states = useSelector(selectStatesData);
   const statesLoading = useSelector(selectStatesLoading);
-  const statesError   = useSelector(selectStatesError);
+  const statesError = useSelector(selectStatesError);
 
-  const isCreating      = useSelector(selectNetworkCreationLoading);
+  const isCreating = useSelector(selectNetworkCreationLoading);
   const creationSuccess = useSelector(selectNetworkCreationSuccess);
-  const creationError   = useSelector(selectNetworkCreationError);
+  const creationError = useSelector(selectNetworkCreationError);
 
   // ── form state ─────────────────────────────────────────────────────────────
   const [formData, setFormData] = useState({ ...INITIAL_FORM });
@@ -211,7 +211,7 @@ const NetworkManagement = () => {
 
   useEffect(() => {
     if (countriesError) showError(countriesError);
-    if (statesError)    showError(statesError);
+    if (statesError) showError(statesError);
   }, [countriesError, statesError]);
 
   useEffect(() => {
@@ -234,12 +234,12 @@ const NetworkManagement = () => {
   useEffect(() => () => { dispatch(resetNetworkCreation()); }, [dispatch]);
 
   // ── validation helpers ─────────────────────────────────────────────────────
-  const trim            = (val) => (val || '').toString().trim();
-  const isEmpty         = (val) => trim(val) === '';
+  const trim = (val) => (val || '').toString().trim();
+  const isEmpty = (val) => trim(val) === '';
   const isPositiveNumber = (val) => { const n = Number(val); return !isNaN(n) && Number.isInteger(n) && n > 0; };
   const isPositiveRealValue1 = (val) => { const n = parseFloat(val); return !isNaN(n) && n >= 0; };
-  const checkCity       = (val) => !isEmpty(val) && /^[a-zA-Z\s\-']+$/.test(trim(val));
-  const isIPAddress     = (val) => {
+  const checkCity = (val) => !isEmpty(val) && /^[a-zA-Z\s\-']+$/.test(trim(val));
+  const isIPAddress = (val) => {
     if (isEmpty(val)) return false;
     if (!/^(\d{1,3}\.){3}\d{1,3}$/.test(val)) return false;
     return val.split('.').every(n => { const x = Number(n); return x >= 0 && x <= 255; });
@@ -256,22 +256,22 @@ const NetworkManagement = () => {
       return condition;
     };
 
-    if (!check(!isEmpty(formData.networkName),   'Please enter the Network Name.'))   return false;
-    if (!check(checkCity(formData.networkName),  'Please enter a valid Network Name.')) return false;
-    if (!check(!isEmpty(formData.networkId),     'Please enter Network Id'))           return false;
-    if (!check(isPositiveNumber(formData.networkId), 'Please enter Network Id'))       return false;
+    if (!check(!isEmpty(formData.networkName), 'Please enter the Network Name.')) return false;
+    if (!check(checkCity(formData.networkName), 'Please enter a valid Network Name.')) return false;
+    if (!check(!isEmpty(formData.networkId), 'Please enter Network Id')) return false;
+    if (!check(isPositiveNumber(formData.networkId), 'Please enter Network Id')) return false;
     if (!check(!isEmpty(formData.networkChiefPassword), 'Please enter the Network Chief Password.')) return false;
     if (formData.networkChiefPassword.length < 6) { showError('The Network Chief Password should have minimum 6 chars.'); return false; }
     if (!check(!isEmpty(formData.confirmPassword), 'Please enter the Confirm Password.')) return false;
     if (formData.confirmPassword.length < 6) { showError('The Confirm Password should have minimum 6 chars.'); return false; }
     if (!check(formData.networkChiefPassword === formData.confirmPassword, 'The Network Chief Password and Confirm Passwords are not matching.')) return false;
-    if (!check(!isEmpty(formData.networkAddress), 'Please enter the Network Address.'))  return false;
-    if (!check(formData.country && formData.country !== '', 'Please select Country'))    return false;
-    if (!check(formData.state && formData.state !== '', 'Please select State.'))         return false;
-    if (!check(!isEmpty(formData.city), 'Please enter the City Name.'))                  return false;
-    if (!check(checkCity(formData.city), 'Please enter a valid City Name.'))             return false;
-    if (!check(!isEmpty(formData.description), 'Please enter the Description.'))         return false;
-    if (!check(!isEmpty(formData.browserDisplay), 'Please enter the Browser Display.'))  return false;
+    if (!check(!isEmpty(formData.networkAddress), 'Please enter the Network Address.')) return false;
+    if (!check(formData.country && formData.country !== '', 'Please select Country')) return false;
+    if (!check(formData.state && formData.state !== '', 'Please select State.')) return false;
+    if (!check(!isEmpty(formData.city), 'Please enter the City Name.')) return false;
+    if (!check(checkCity(formData.city), 'Please enter a valid City Name.')) return false;
+    if (!check(!isEmpty(formData.description), 'Please enter the Description.')) return false;
+    if (!check(!isEmpty(formData.browserDisplay), 'Please enter the Browser Display.')) return false;
     if (!check(checkCity(formData.browserDisplay), 'Please enter a valid Browser Display.')) return false;
     if (!check(formData.browserDisplay === formData.networkName, 'Network Name and Browser Display are not matching.')) return false;
     if (formData.imsiPrefix.length === 0) { showError('please enter IMSI Prefix.'); return false; }
@@ -290,7 +290,7 @@ const NetworkManagement = () => {
     if (!check(!isEmpty(formData.voucherPrefix), 'Please enter the Voucher Prefix')) return false;
     if (!check(isPositiveNumber(formData.voucherPrefix), 'Please enter a valid Voucher Prefix.')) return false;
     const supp1 = trim(formData.supplyChargeTitle1), supp2 = trim(formData.supplyChargeTitle2),
-          supp3 = trim(formData.supplyChargeTitle3), supp4 = trim(formData.supplyChargeTitle4);
+      supp3 = trim(formData.supplyChargeTitle3), supp4 = trim(formData.supplyChargeTitle4);
     if (!check(!isEmpty(supp1), 'Plese enter Supply Charge1 Title')) return false;
     if (!check(checkCity(supp1), 'Please enter a valid Supply Charge1 Title.')) return false;
     if (!isEmpty(supp2) && !check(checkCity(supp2), 'Please enter a valid Supply Charge2 Title.')) return false;
@@ -378,51 +378,51 @@ const NetworkManagement = () => {
     if (!validateForm()) return;
 
     const payload = {
-      networkName:      formData.networkName.trim(),
-      networkId:        Number(formData.networkId) || 0,
+      networkName: formData.networkName.trim(),
+      networkId: Number(formData.networkId) || 0,
       networkChiefPassword: formData.networkChiefPassword,
-      confirmPassword:  formData.confirmPassword,
-      networkCode:      Number(formData.networkCode),
-      country:          formData.country,
-      state:            formData.state,
-      city:             formData.city?.trim()           || '',
-      networkAddress:   formData.networkAddress?.trim() || '',
-      browserDisplay:   formData.browserDisplay?.trim() || '',
-      description:      formData.description?.trim()    || '',
-      imsiPrefix:       formData.imsiPrefix.map(Number),
-      maxOperatorFailedImsi:          Number(formData.maxOperatorFailedImsi) || 0,
-      msisdnLength:                   Number(formData.msisdnLength),
+      confirmPassword: formData.confirmPassword,
+      networkCode: Number(formData.networkCode),
+      country: formData.country,
+      state: formData.state,
+      city: formData.city?.trim() || '',
+      networkAddress: formData.networkAddress?.trim() || '',
+      browserDisplay: formData.browserDisplay?.trim() || '',
+      description: formData.description?.trim() || '',
+      imsiPrefix: formData.imsiPrefix.map(Number),
+      maxOperatorFailedImsi: Number(formData.maxOperatorFailedImsi) || 0,
+      msisdnLength: Number(formData.msisdnLength),
       maxOperatorFailedLoginAttempts: Number(formData.maxOperatorFailedLogin) || 0,
-      maxSubscriberLoginAttempts:     Number(formData.maxSubscriberLogin) || 0,
-      smsThreshold:     formData.smsThresholdRm ? Number(formData.smsThresholdRm) : 0,
-      voucherPrefix:    formData.voucherPrefix?.trim()  || '',
+      maxSubscriberLoginAttempts: Number(formData.maxSubscriberLogin) || 0,
+      smsThreshold: formData.smsThresholdRm ? Number(formData.smsThresholdRm) : 0,
+      voucherPrefix: formData.voucherPrefix?.trim() || '',
       subscriberDefaultPin: formData.subscriberDefaultPin ? Number(formData.subscriberDefaultPin) : 0,
-      camelNodeId:      formData.camelNodeId   ? Number(formData.camelNodeId)   : 0,
-      lrrGroupId:       formData.lrrGroupId    ? Number(formData.lrrGroupId)    : 0,
-      sipGroupId:       formData.sipGroupId    ? Number(formData.sipGroupId)    : 0,
-      supplyCharge1:    formData.supplyChargeTitle1?.trim() || '',
-      supplyCharge2:    formData.supplyChargeTitle2?.trim() || '',
-      supplyCharge3:    formData.supplyChargeTitle3?.trim() || '',
-      supplyCharge4:    formData.supplyChargeTitle4?.trim() || '',
-      g2BalanceRetention:        formData.g2BalanceRetention === 'Yes' ? 'Y' : 'N',
+      camelNodeId: formData.camelNodeId ? Number(formData.camelNodeId) : 0,
+      lrrGroupId: formData.lrrGroupId ? Number(formData.lrrGroupId) : 0,
+      sipGroupId: formData.sipGroupId ? Number(formData.sipGroupId) : 0,
+      supplyCharge1: formData.supplyChargeTitle1?.trim() || '',
+      supplyCharge2: formData.supplyChargeTitle2?.trim() || '',
+      supplyCharge3: formData.supplyChargeTitle3?.trim() || '',
+      supplyCharge4: formData.supplyChargeTitle4?.trim() || '',
+      g2BalanceRetention: formData.g2BalanceRetention === 'Yes' ? 'Y' : 'N',
       personalEmergencyCallFlag: formData.personalEmergencyCallFlag ? 'Y' : 'N',
       personalEmergencyCallCount: formData.personalEmergencyCallCount ? Number(formData.personalEmergencyCallCount) : 0,
-      roamingAcrossHomeCountry:  formData.roamingAcrossHomeCountry ? 'Y' : 'N',
-      statusTransitFlag:         formData.statusTransitFlag === 'Yes' ? 'Y' : 'N',
+      roamingAcrossHomeCountry: formData.roamingAcrossHomeCountry ? 'Y' : 'N',
+      statusTransitFlag: formData.statusTransitFlag === 'Yes' ? 'Y' : 'N',
       vccMsisdnSeries: formData.vccMsisdnSeries ? Number(formData.vccMsisdnSeries) : 0,
-      vmsNumber:       formData.vmsNumber       ? Number(formData.vmsNumber)       : 0,
-      firstThreshold:  formData.firstThreshold  ? Number(formData.firstThreshold)  : 0,
+      vmsNumber: formData.vmsNumber ? Number(formData.vmsNumber) : 0,
+      firstThreshold: formData.firstThreshold ? Number(formData.firstThreshold) : 0,
       secondThreshold: formData.secondThreshold ? Number(formData.secondThreshold) : 0,
-      bssui:  formData.bssUiEnabled  ? 'Y' : 'N',
-      hlrui:  formData.hlrUiEnabled  ? 'Y' : 'N',
-      hssui:  formData.hssUiEnabled  ? 'Y' : 'N',
-      msgui:  formData.msgUiEnabled  ? 'Y' : 'N',
+      bssui: formData.bssUiEnabled ? 'Y' : 'N',
+      hlrui: formData.hlrUiEnabled ? 'Y' : 'N',
+      hssui: formData.hssUiEnabled ? 'Y' : 'N',
+      msgui: formData.msgUiEnabled ? 'Y' : 'N',
       pcrfui: formData.pcrfUiEnabled ? 'Y' : 'N',
       ...(formData.voipEnabled && {
         domainName: formData.domainName?.trim() || '',
         domainIpAddress: [formData.domainIp1, formData.domainIp2, formData.domainIp3, formData.domainIp4]
           .filter(Boolean).join('.') || '',
-        ringToneAlertInfoUrl:     formData.ringToneAlertInfoUrl?.trim()     || '',
+        ringToneAlertInfoUrl: formData.ringToneAlertInfoUrl?.trim() || '',
         ringBackToneAlertInfoUrl: formData.ringBackToneAlertInfoUrl?.trim() || '',
       }),
     };
@@ -610,8 +610,8 @@ const NetworkManagement = () => {
 
           <div className={styles.formGrid3}>
             <FormField fieldName="subscriberDefaultPin" label={lbl('networkmanagementmodify.subscriberDefaultPin', 'Subscriber Default Pin')} value={formData.subscriberDefaultPin} onChange={handleInputChange} />
-            <FormField fieldName="camelNodeId"          label={lbl('networkmanagementmodify.camelNodeId', 'Camel Node ID')}                   value={formData.camelNodeId}          onChange={handleInputChange} />
-            <FormField fieldName="supplyChargeTitle1"   label={lbl('networkmanagementmodify.supplyCharge1', 'Supply Charge 1')}               value={formData.supplyChargeTitle1}   onChange={handleInputChange} />
+            <FormField fieldName="camelNodeId" label={lbl('networkmanagementmodify.camelNodeId', 'Camel Node ID')} value={formData.camelNodeId} onChange={handleInputChange} />
+            <FormField fieldName="supplyChargeTitle1" label={lbl('networkmanagementmodify.supplyCharge1', 'Supply Charge 1')} value={formData.supplyChargeTitle1} onChange={handleInputChange} />
           </div>
 
           <div className={styles.formGrid3}>
@@ -693,10 +693,10 @@ const NetworkManagement = () => {
             <div className={styles.conditionalPanel}>
               <div className={styles.uiAccessGrid}>
                 {[
-                  { name: 'bssUiEnabled',  label: 'BSS UI'  },
-                  { name: 'hlrUiEnabled',  label: 'HLR UI'  },
-                  { name: 'hssUiEnabled',  label: 'HSS UI'  },
-                  { name: 'msgUiEnabled',  label: 'MSG UI'  },
+                  { name: 'bssUiEnabled', label: 'BSS UI' },
+                  { name: 'hlrUiEnabled', label: 'HLR UI' },
+                  { name: 'hssUiEnabled', label: 'HSS UI' },
+                  { name: 'msgUiEnabled', label: 'MSG UI' },
                   { name: 'pcrfUiEnabled', label: 'PCRF UI' },
                 ].map(({ name, label }) => (
                   <label key={name} className={styles.checkboxRow}>
@@ -749,8 +749,8 @@ const NetworkManagement = () => {
                 />
               </div>
               <div className={styles.formGrid3}>
-                <FormField fieldName="sipGroupId"              label={lbl('networkmanagementmodify.sipGroupId', 'SIP Group ID')}                          value={formData.sipGroupId}              onChange={handleInputChange} />
-                <FormField fieldName="ringToneAlertInfoUrl"    label={lbl('networkmanagementmodify.ringToneAlertInfoUrl', 'Ring Tone Alert Info URL')}    value={formData.ringToneAlertInfoUrl}    onChange={handleInputChange} />
+                <FormField fieldName="sipGroupId" label={lbl('networkmanagementmodify.sipGroupId', 'SIP Group ID')} value={formData.sipGroupId} onChange={handleInputChange} />
+                <FormField fieldName="ringToneAlertInfoUrl" label={lbl('networkmanagementmodify.ringToneAlertInfoUrl', 'Ring Tone Alert Info URL')} value={formData.ringToneAlertInfoUrl} onChange={handleInputChange} />
                 <FormField fieldName="ringBackToneAlertInfoUrl" label={lbl('networkmanagementmodify.ringBackToneAlertInfoUrl', 'Ring Back Tone Alert Info URL')} value={formData.ringBackToneAlertInfoUrl} onChange={handleInputChange} />
               </div>
             </div>

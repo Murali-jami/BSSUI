@@ -26,8 +26,8 @@ const NetworkStatusCode = () => {
   const statusText = getStatusText();
 
   // Final display message
-  const displayMessage = message || 
-    (isSuccess 
+  const displayMessage = message ||
+    (isSuccess
       ? `Network "${networkName}" has been ${statusText} successfully.`
       : 'Failed to update network status. Please try again.');
 
@@ -38,7 +38,7 @@ const NetworkStatusCode = () => {
   return (
     <div className="screen-container-mvno-selection-screen">
       <div className="screen-form" style={{ textAlign: 'center', padding: '40px' }}>
-        <div 
+        <div
           className={`${styles.messageCard} ${isSuccess ? styles.success : styles.error}`}
         >
           <div className={styles.icon}>
@@ -51,7 +51,7 @@ const NetworkStatusCode = () => {
 
           {networkName && (
             <p className={styles.networkInfo}>
-              Network: <strong>{networkName}</strong> 
+              Network: <strong>{networkName}</strong>
               {networkId && <span> (ID: {networkId})</span>}
             </p>
           )}
@@ -66,7 +66,7 @@ const NetworkStatusCode = () => {
             </div>
           )}
 
-          <button 
+          <button
             onClick={handleGoHome}
             className={styles.homeButton}
           >
