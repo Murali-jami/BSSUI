@@ -54,10 +54,10 @@
 
 :global(.form-input),
 :global(.form-select) {
-  height: 44px;
+  /* height: 44px; */
   border: 1px solid #d1d5db;
   border-radius: 12px;
-  padding: 0 14px;
+  padding: 11px 13px;
   font-size: 14px;
   color: #111827;
   background: white;

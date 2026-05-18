@@ -612,8 +612,19 @@ const NetworkConfigure = () => {
           <div className={styles.formBody}>
             {/* SECTION 1 */}
             <div className={styles.sectionCard}>
-              <h2 className={styles.sectionTitle}>{getLabel('NetworkConfiguration.title')}</h2>
-              
+              <div className={styles.pageTitleBar}>
+                <h2 className={styles.pageTitle}>
+                  {getLabel("NetworkConfiguration.title")}
+                </h2>
+
+                <button
+                  type="button"
+                  className={styles.backButton}
+                  onClick={() => navigate(-1)}
+                >
+                  ← Back
+                </button>
+              </div>
 
               {/* Network Info Header - clean side-by-side layout */}
               <div className={styles.metaGrid}>

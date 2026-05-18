@@ -315,6 +315,9 @@ import UserManagementGrid from "../modules/userManagement/pages/UserManagementGr
 import UserManagementScreen from "../modules/userManagement/pages/UserManagementScreen";
 import ViewRole from "../modules/userManagement/pages/ViewRole";
 import ViewUserInfoPage from "../modules/userManagement/pages/ViewUserInfoPage";
+import ChangePassword from './../modules/userManagement/pages/ChangePassword';
+import ModifyMessagePage from './../modules/userManagement/pages/ModifyMessagePage';
+import StatusMessagePage from './../modules/userManagement/pages/StatusMessagePage';
 
 /* =========================
    ADMIN ROUTE
@@ -487,6 +490,9 @@ function AppRoutes() {
                     <Route path="/ums/view-role/:id" element={<ViewRole />} />
                     <Route path="/ums/role-create-status" element={<RoleCreationStatus />} />
                     <Route path="/ums/role-modify-status" element={<RoleModifyStatus />} />
+                    <Route path="/ums/changepassword/:loginName" element={<ChangePassword />} />
+                    <Route path="/modify-message" element={<ModifyMessagePage />} />
+                    <Route path="/status-message" element={<StatusMessagePage />} />
 
                     {/* ICB */}
 

@@ -90,6 +90,8 @@ const ViewUserInfoPreview = () => {
     statusDate: '-'
   };
 
+  console.log("userInfo => ", userInfo);
+
   return (
     <div className="screen-layout-user">
       <div className="screen-container-userManagement">

@@ -27,18 +27,18 @@ const NetworkManagementGrid = () => {
   const { getLabel } = useAppContext();
 
   // ─── Selectors ────────────────────────────────────────────────
-  const networks      = useSelector(selectNetworkListData)      || [];
-  const listLoading   = useSelector(selectNetworkListLoading);
-  const listError     = useSelector(selectNetworkListError);
+  const networks = useSelector(selectNetworkListData) || [];
+  const listLoading = useSelector(selectNetworkListLoading);
+  const listError = useSelector(selectNetworkListError);
   const statusLoading = useSelector(selectNetworkStatusLoading);
   const statusSuccess = useSelector(selectNetworkStatusSuccess);
-  const statusError   = useSelector(selectNetworkStatusError);
+  const statusError = useSelector(selectNetworkStatusError);
 
   // ─── Local State ──────────────────────────────────────────────
-  const [selectedNetwork,  setSelectedNetwork]  = useState(null);
-  const [searchTerm,       setSearchTerm]       = useState("");
-  const [currentPage,      setCurrentPage]      = useState(1);
-  const [perPage,          setPerPage]          = useState(10);
+  const [selectedNetwork, setSelectedNetwork] = useState(null);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const [perPage, setPerPage] = useState(10);
   const [filteredNetworks, setFilteredNetworks] = useState([]);
 
   // ─── Fetch on mount ───────────────────────────────────────────
@@ -57,10 +57,10 @@ const NetworkManagementGrid = () => {
       if (selectedNetwork) {
         navigate("/admin/network-status-code", {
           state: {
-            isSuccess:   true,
-            message:     statusSuccess,
+            isSuccess: true,
+            message: statusSuccess,
             networkName: selectedNetwork.networkName,
-            networkId:   selectedNetwork.networkId,
+            networkId: selectedNetwork.networkId,
           },
         });
       }
@@ -89,16 +89,16 @@ const NetworkManagementGrid = () => {
   }, [networks, searchTerm]);
 
   // ─── Action handlers ──────────────────────────────────────────
-  const handleCreateNetwork    = () => navigate("/admin/networkmanagement");
+  const handleCreateNetwork = () => navigate("/admin/networkmanagement");
 
-  const handleChangePassword   = () => {
+  const handleChangePassword = () => {
     if (!selectedNetwork) return showError("Please select a network first");
     navigate(`/admin/networkchangepassword/${selectedNetwork.networkId}`, {
       state: { networkId: selectedNetwork.networkId, networkName: selectedNetwork.networkName },
     });
   };
 
-  const handleActivateNetwork  = () => {
+  const handleActivateNetwork = () => {
     if (!selectedNetwork) return showError("Please select a network first");
     dispatch(updateNetworkStatus({ networkId: selectedNetwork.networkId, networkName: selectedNetwork.networkName, statusCode: "AC" }));
   };
@@ -108,16 +108,16 @@ const NetworkManagementGrid = () => {
     dispatch(updateNetworkStatus({ networkId: selectedNetwork.networkId, networkName: selectedNetwork.networkName, statusCode: "DA" }));
   };
 
-  const handleViewNetwork      = (net) => { setSelectedNetwork(net); navigate(`/admin/network-view/${net.networkId}`); };
-  const handleModifyNetwork    = (net) => { setSelectedNetwork(net); navigate(`/admin/networkmanagementmodify/${net.networkId}`); };
+  const handleViewNetwork = (net) => { setSelectedNetwork(net); navigate(`/admin/network-view/${net.networkId}`); };
+  const handleModifyNetwork = (net) => { setSelectedNetwork(net); navigate(`/admin/networkmanagementmodify/${net.networkId}`); };
   const handleConfigureNetwork = (net) => {
     setSelectedNetwork(net);
     navigate(`/admin/network-configure/${net.networkId}/${encodeURIComponent(net.networkName)}`);
   };
 
   // ─── Pagination ───────────────────────────────────────────────
-  const totalPages      = Math.ceil(filteredNetworks.length / perPage);
-  const startIdx        = (currentPage - 1) * perPage;
+  const totalPages = Math.ceil(filteredNetworks.length / perPage);
+  const startIdx = (currentPage - 1) * perPage;
   const currentNetworks = filteredNetworks.slice(startIdx, startIdx + perPage);
 
   // ─── Render ───────────────────────────────────────────────────
@@ -182,7 +182,7 @@ const NetworkManagementGrid = () => {
                 <circle cx="10" cy="7" r="3" /><path d="M4 21v-2a5 5 0 0 1 10 0v2" />
                 <polyline points="16 11 18 13 22 9" />
               </svg>
-              {statusLoading ? "Activating…" : (getLabel("Activate") ||"Activate")}
+              {statusLoading ? "Activating…" : (getLabel("Activate") || "Activate")}
             </button>
 
             {/* Deactivate */}
@@ -206,10 +206,10 @@ const NetworkManagementGrid = () => {
             <thead>
               <tr>
                 <th className={styles.thCheck}></th>
-                <th>{getLabel("networkmanagementgrid.networkName")  || "Network Name"}</th>
-                <th>{getLabel("networkmanagementgrid.networkCode")  || "Network Code"}</th>
-                <th>{getLabel("networkmanagementgrid.StatusCode")   || "Status Code"}</th>
-                <th>{getLabel("networkmanagementgrid.Action")       || "Action"}</th>
+                <th>{getLabel("networkmanagementgrid.networkName") || "Network Name"}</th>
+                <th>{getLabel("networkmanagementgrid.networkCode") || "Network Code"}</th>
+                <th>{getLabel("networkmanagementgrid.StatusCode") || "Status Code"}</th>
+                <th>{getLabel("networkmanagementgrid.Action") || "Action"}</th>
               </tr>
             </thead>
             <tbody>
@@ -229,7 +229,7 @@ const NetworkManagementGrid = () => {
                         type="radio"
                         name="selectNetwork"
                         checked={selectedNetwork?.networkId === net.networkId}
-                        onChange={() => {}}
+                        onChange={() => { }}
                         onClick={() => setSelectedNetwork(
                           selectedNetwork?.networkId === net.networkId ? null : net
                         )}
