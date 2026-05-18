@@ -281,9 +281,9 @@ import AdminLayout from "../layouts/AdminLayout";
 import AuthLayout from "../layouts/AuthLayout";
 import HomeLayout from "../layouts/HomeLayout";
 import ModuleLayout from "../layouts/ModuleLayout";
-
 import Login from "../modules/auth/pages/Login";
 import Home from "../modules/home/pages/Home";
+import CardProfileLayout from "../modules/plmn/pages/CardProfileLayout";
 
 import { ToastContainer } from "react-toastify";
 
@@ -318,6 +318,10 @@ import ViewUserInfoPage from "../modules/userManagement/pages/ViewUserInfoPage";
 import ChangePassword from './../modules/userManagement/pages/ChangePassword';
 import ModifyMessagePage from './../modules/userManagement/pages/ModifyMessagePage';
 import StatusMessagePage from './../modules/userManagement/pages/StatusMessagePage';
+
+//plmn
+import VouchersLayout from "../modules/plmn/pages/VouchersLayout";
+import UploadMSISDN from "../modules/plmn/pages/MsisdnUpload";
 
 /* =========================
    ADMIN ROUTE
@@ -427,17 +431,43 @@ function AppRoutes() {
                     {/* PLMN */}
 
                     <Route path="/plmn" element={<Navigate to="/plmn/clc" replace />} />
-                    <Route path="/plmn/clc" element={<Navigate to="/plmn/clc/card-voucher-profile-categories" replace />} />
 
-                    <Route path="/plmn/clc/card-voucher-profile-categories" element={<div>Static Div</div>} />
-                    <Route path="/plmn/clc/card-profile" element={<PlaceholderPage title="Card Profile" />} />
-                    <Route path="/plmn/clc/vouchers" element={<PlaceholderPage title="Vouchers" />} />
+                    <Route
+                        path="/plmn/clc"
+                        element={<Navigate to="/plmn/clc/card-voucher-profile-categories" replace />}
+                    />
+
+                    <Route
+                        path="/plmn/clc/card-voucher-profile-categories"
+                        element={<div>Card Voucher Profile Categories</div>}
+                    />
+
+                    <Route path="/plmn/clc/card-profile" element={<CardProfileLayout />} />
+
+                    {/* <Route path="/plmn/clc/card-profile" element={<div>Card Profile</div>} /> */}
+                    {/* Vouchers */}
+
+                    <Route path="/plmn/clc/vouchers/*" element={<VouchersLayout />} />
+
+
+
+
+                    <Route
+                        path="/plmn/clc/upload-msisdn"
+                        element={<UploadMSISDN />}
+                    />
+
+
+    
+
 
                     {/* CMS */}
 
                     <Route path="/plmn/cms" element={<Navigate to="/plmn/cms/card-voucher-profile-categories" replace />} />
                     <Route path="/plmn/cms/card-voucher-profile-categories" element={<PlaceholderPage title="Card Voucher Profile Categories" />} />
-                    <Route path="/plmn/cms/card-profile" element={<PlaceholderPage title="Card Profile" />} />
+                    {/* <Route path="/plmn/cms/card-profile" element={<PlaceholderPage title="Card Profile" />} /> */}
+
+                     <Route path="/plmn/clc/card-profile" element={<CardProfileLayout />} />
                     <Route path="/plmn/cms/vouchers" element={<PlaceholderPage title="Vouchers" />} />
                     <Route path="/plmn/cms/goods-receipts" element={<PlaceholderPage title="Goods Receipts" />} />
                     <Route path="/plmn/cms/vendor-details" element={<PlaceholderPage title="Vendor Details" />} />
