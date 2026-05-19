@@ -1,13 +1,13 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   fetchCategories,
   createCategory,
   modifyCategory,
   clearSubmitState,
-} from '../../../store/slices/plmnSlices/voucherCategorySlice';
+} from '@/store/slices/plmnSlices/voucherCategorySlice';
 
-import { PRIVILEGES, hasPrivilege } from "../../../utils/privileges";
+import { PRIVILEGES, hasPrivilege } from "@/ConstantFiles/privileges";
 
 const VIEW = {
   LIST: 'list',

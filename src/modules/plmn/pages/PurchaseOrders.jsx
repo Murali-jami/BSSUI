@@ -1,6 +1,6 @@
 
 
-import React, { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 
@@ -16,11 +16,11 @@ import {
     generatePOFile,
     cancelPurchaseOrder,
     clearPurchaseOrderState,
-} from "../../../store/slices/plmnSlices/purchaseOrderSlice";
+} from "@/store/slices/plmnSlices/purchaseOrderSlice";
 
 import styles from "../styles/PurchaseOrders.module.css";
-import { showSuccess, showError } from "../../../utils/toast";
-import { PRIVILEGES, hasPrivilege } from "../../../utils/privileges";
+import { showSuccess, showError } from "@/utils/toast";
+import { PRIVILEGES, hasPrivilege } from "@/ConstantFiles/privileges";
 
 const VIEW = {
     LIST: "LIST",

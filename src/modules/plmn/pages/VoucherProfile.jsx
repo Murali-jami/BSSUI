@@ -9,9 +9,9 @@ import {
     rejectProfile,
     clearSubmitState,
     fetchDropdowns,
-} from "../../../store/slices/plmnSlices/voucherProfileSlice";
+} from "@/store/slices/plmnSlices/voucherProfileSlice";
 
-import { PRIVILEGES, hasPrivilege } from "../../../utils/privileges";
+import { PRIVILEGES, hasPrivilege } from "@/ConstantFiles/privileges";
 import styles from "../styles/VoucherProfile.module.css";
 
 // ─── Selectors ────────────────────────────────────────────────

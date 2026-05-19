@@ -1,13 +1,13 @@
-import React, { useEffect, useState, useMemo } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
     fetchCategories,
     createCategory,
     modifyCategory,
     clearSubmitState,
-} from '../../../store/slices/plmnSlices/voucherCategorySlice';
+} from '@/store/slices/plmnSlices/voucherCategorySlice';
 import styles from '../styles/VoucherCategory.module.css';
-import { PRIVILEGES, hasPrivilege } from "../../../utils/privileges";
+import { PRIVILEGES, hasPrivilege } from "@/ConstantFiles/privileges";
 
 // ─── Selectors ────────────────────────────────────────────────
 const sel = {

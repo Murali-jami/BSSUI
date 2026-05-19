@@ -1,6 +1,6 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { fetchDashboardData } from '../../../store/slices/plmnSlices/voucherSlice';
+import { fetchDashboardData } from '@/store/slices/plmnSlices/voucherSlice';
 
 import VoucherCategory from "./VoucherCategory";
 import VoucherProfile from "./VoucherProfile";
@@ -8,7 +8,7 @@ import Vendors from "./Vendors";
 import PurchaseOrders from "./PurchaseOrders";
 import VoucherActDeact from "./VoucherActDeact";
 import VoucherSearchScreen from "./VoucherSearchScreen";
-import { PRIVILEGES, hasPrivilege } from "../../../utils/privileges";
+import { PRIVILEGES, hasPrivilege } from "@/ConstantFiles/privileges";
 
 import { Routes, Route, Navigate, useLocation, useNavigate } from "react-router-dom";
 import styles from '../styles/VouchersLayout.module.css';

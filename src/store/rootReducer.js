@@ -29,10 +29,6 @@ import userRolesReducer from "./slices/userManagementSlices/userRolesSlice";
 import workgroupReducer from "./slices/userManagementSlices/workgroupSlice";
 import viewUserInfoReducer from './slices/userManagementSlices/viewUserInfoSlice';
 
-
-
-//plmn services
-
 import voucherProfileReducer from "./slices/plmnSlices/voucherProfileSlice";
 
 import voucherReducer from './slices/plmnSlices/voucherSlice';
@@ -48,6 +44,7 @@ import msisdnUploadReducer from './slices/plmnSlices/msisdnUploadSlice';
 
 import voucherActivationReducer from './slices/plmnSlices/voucherActDeactSlice';
 // import countriesReducer from "./slices/plmnSlices/countriesSlice";
+
 
 const rootReducer = combineReducers({
     // AUTH
@@ -78,21 +75,18 @@ const rootReducer = combineReducers({
     userRoles: userRolesReducer,
     workgroup: workgroupReducer,
     viewUserInfo: viewUserInfoReducer,
-
-
-
     //plmn services
-     voucherProfile: voucherProfileReducer,
-        voucher: voucherReducer,
-        voucherCategory: voucherCategoryReducer,
-        purchaseOrder: purchaseOrderReducer,
-        voucherSearch: voucherSearchReducer,
-    
-        vendor: vendorReducer,
-    
-        msisdnUpload: msisdnUploadReducer,
-    
-        voucherActDeact: voucherActivationReducer,
+    voucherProfile: voucherProfileReducer,
+    voucher: voucherReducer,
+    voucherCategory: voucherCategoryReducer,
+    purchaseOrder: purchaseOrderReducer,
+    voucherSearch: voucherSearchReducer,
+
+    vendor: vendorReducer,
+
+    msisdnUpload: msisdnUploadReducer,
+
+    voucherActDeact: voucherActivationReducer,
 });
 
 export default rootReducer;

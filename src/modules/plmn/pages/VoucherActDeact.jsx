@@ -1,12 +1,12 @@
-import React, { useState, useCallback } from 'react';
+import { useState, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
     activateVouchers,
     deactivateVouchers,
     clearActivationState,
-} from  "../../../store/slices/plmnSlices/voucherActDeactSlice";
+} from  "@/store/slices/plmnSlices/voucherActDeactSlice";
 import styles from '../styles/VoucherActDeact.module.css';
-import { PRIVILEGES, hasPrivilege } from "../../../utils/privileges";
+import { PRIVILEGES, hasPrivilege } from "@/ConstantFiles/privileges";
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 const MODE = { ACTIVATE: 'activate', DEACTIVATE: 'deactivate' };

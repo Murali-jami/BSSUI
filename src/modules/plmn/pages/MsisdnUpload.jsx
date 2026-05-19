@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import {
@@ -7,9 +7,9 @@ import {
     selectMsisdnUploadLoading,
     selectMsisdnUploadSuccess,
     selectMsisdnUploadError,
-} from "../../../store/slices/plmnSlices/msisdnUploadSlice";
-import { PRIVILEGES, hasPrivilege } from "../../../utils/privileges";
-import { showSuccess, showError } from "../../../utils/toast";
+} from "@/store/slices/plmnSlices/msisdnUploadSlice.js";
+import { PRIVILEGES, hasPrivilege } from "@/ConstantFiles/privileges.js";
+import { showSuccess, showError } from "@/utils/toast";
 import styles from "../styles/msisdnupload.module.css";
 
 const MsisdnUpload = () => {
@@ -31,6 +31,13 @@ const MsisdnUpload = () => {
 
     const fileInputRef = useRef(null);
 
+    // Clear file input
+    const clearFile = () => {
+        setFile(null);
+        if (fileInputRef.current) {
+            fileInputRef.current.value = "";
+        }
+    };
 
     // Handle API response
     useEffect(() => {
@@ -44,14 +51,6 @@ const MsisdnUpload = () => {
             showError(file ? `${file.name} has wrong uploads. ${error}` : error);
         }
     }, [success, error, dispatch, file]);
-
-    // Clear file input
-    const clearFile = () => {
-        setFile(null);
-        if (fileInputRef.current) {
-            fileInputRef.current.value = "";
-        }
-    };
 
     // Submit handler
     const handleSubmit = (e) => {

@@ -1,15 +1,15 @@
 
-import React, { useEffect, useState } from "react";
+import  { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { showSuccess, showError } from "../../../utils/toast";
-import { PRIVILEGES, hasPrivilege } from "../../../utils/privileges";
+import { showSuccess, showError } from "@/utils/toast";
+import { PRIVILEGES, hasPrivilege } from "@/ConstantFiles/privileges";
 
 import {
   searchVoucher,
   fetchExpiredProfiles,
   generateExpiredVoucherFile,
   clearVoucher,
-} from "../../../store/slices/plmnSlices/VoucherSearchSlice";
+} from "@/store/slices/plmnSlices/VoucherSearchSlice";
 
 import styles from "../styles/VoucherSearch.module.css";
 

@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import { useState } from "react";
 
-import styles from "../styles/CardProfileLayout.module.css";
+// import styles from "../styles/CardProfileLayout.module.css";
+import styles from "@/modules/plmn/styles/CardProfileLayout.module.css";
 
 import CardProfiles from "./CardProfiles";
 

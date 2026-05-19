@@ -14,9 +14,9 @@ import {
     setPrices,
     fetchVoucherSerials,
     clearVoucherSerials,
-} from '../../../store/slices/plmnSlices/vendorSlice';
-import { fetchCountries, selectCountryOptions } from "../../../store/slices/countriesSlice";
-import { fetchStates, clearStates, selectStatesData, selectStatesLoading } from "../../../store/slices/statesSlice";
+} from '@/store/slices/plmnSlices/vendorSlice';
+import { fetchCountries, selectCountryOptions } from "@/store/slices/countriesSlice";
+import { fetchStates, clearStates, selectStatesData, selectStatesLoading } from "@/store/slices/statesSlice";
 import styles from '../styles/Vendors.module.css';
 
 

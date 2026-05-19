@@ -98,30 +98,30 @@ export const PLMN_TABS = [
     // },
 
     {
-  id: "CLC",
-  label: "Card Life Cycle Management",
-  route: "/plmn/clc",
-  sidebarItems: [
-    {
-      label: "SIM & Voucher Management",
-      isGroup: true,
-      children: [
-  
+        id: "CLC",
+        label: "Card Life Cycle Management",
+        route: "/plmn/clc",
+        sidebarItems: [
+            {
+                label: "SIM & Voucher Management",
+                isGroup: true,
+                children: [
 
-  {
-    label: "Card Profile",
-    route: "/plmn/clc/card-profile",
-    icon: "card",
-    // children: [
-    //   { label: "Add", route: "/plmn/clc/card-profile/add" },
-    //   { label: "Modify", route: "/plmn/clc/card-profile/modify" },
-    //   { label: "View", route: "/plmn/clc/card-profile/view" },
-    //   { label: "Approve / Reject Profiles", route: "/plmn/clc/card-profile/approve-reject" },
-    //   { label: "Map Account Profile", route: "/plmn/clc/card-profile/map-account-profile" },
-    //   { label: "PromoMap Card Profile Cells", route: "/plmn/clc/card-profile/promo-map-card-profile-cells" },
-    //   { label: "Configure Default CardProfile", route: "/plmn/clc/card-profile/configure-default" },
-    // ],
-  },
+
+                    {
+                        label: "Card Profile",
+                        route: "/plmn/clc/card-profile",
+                        icon: "card",
+                        // children: [
+                        //   { label: "Add", route: "/plmn/clc/card-profile/add" },
+                        //   { label: "Modify", route: "/plmn/clc/card-profile/modify" },
+                        //   { label: "View", route: "/plmn/clc/card-profile/view" },
+                        //   { label: "Approve / Reject Profiles", route: "/plmn/clc/card-profile/approve-reject" },
+                        //   { label: "Map Account Profile", route: "/plmn/clc/card-profile/map-account-profile" },
+                        //   { label: "PromoMap Card Profile Cells", route: "/plmn/clc/card-profile/promo-map-card-profile-cells" },
+                        //   { label: "Configure Default CardProfile", route: "/plmn/clc/card-profile/configure-default" },
+                        // ],
+                    },
 
 //   {
 //     label: "Vouchers",
@@ -141,54 +141,54 @@ export const PLMN_TABS = [
 //       //{ label: "GST Profile Update", route: "/plmn/clc/vouchers/gst-profile-update" },
 //     ],
 //   },
-{
-  label: "Vouchers",
-  route: "/plmn/clc/vouchers",
-  icon: "tag",
-},
-      ],
+                    {
+                        label: "Vouchers",
+                        route: "/plmn/clc/vouchers",
+                        icon: "tag",
+                    },
+                ],
 
+            },
+
+            {
+                label: "Corp Management",
+                isGroup: true,
+                children: [
+                    {
+                        label: "Integrator Management",
+                        route: "/plmn/clc/integrator-management",
+                        icon: "card",
+                        children: [
+                            { label: "Manage Integrators", route: "/plmn/clc/integrator-management/manage-integrators" },
+                            { label: "Add Integrators Amount", route: "/plmn/clc/integrator-management/add-integrators-amount" },
+                            { label: "Map Integrate Users", route: "/plmn/clc/integrator-management/map-integrate-users" },
+                            { label: "Assign SIMS", route: "/plmn/clc/integrator-management/assign-sims" },
+                            { label: "Manage Tariff Packs", route: "/plmn/clc/integrator-management/manage-tariff-packs" },
+                            { label: "Assign Vouchers", route: "/plmn/clc/integrator-management/assign-vouchers" },
+                        ],
+                    },
+                ],
+            },
+
+            {
+                label: "Inventory Management",
+                isGroup: true,
+                children: [
+                    { label: "Upload MSISDN", route: "/plmn/clc/upload-msisdn" },
+                    { label: "Manage Inventory Type", route: "/plmn/clc/manage-inventory-type" },
+                    { label: "Inventory Upload", route: "/plmn/clc/inventory-upload" },
+                    { label: "Upload PUK", route: "/plmn/clc/upload-puk" },
+                    { label: "Inventory Upload Status", route: "/plmn/clc/inventory-status" },
+                    // { label: "Inventory Status", route: "/plmn/clc/inventory-status" },
+                    // { label: "Extract SIM Details", route: "/plmn/clc/extract-sim-details" },
+                    { label: "Triplet Association", route: "/plmn/clc/triplet-association" },
+                    { label: "Triplet Association View", route: "/plmn/clc/triplet-association-view" },
+                    { label: "Location Bulk Upload", route: "/plmn/clc/location-bulk-upload" },
+                    { label: "Upload Fancy MSISDN", route: "/plmn/clc/upload-fancy-msisdn" },
+                ],
+            },
+        ],
     },
-
-    {
-  label: "Corp Management",
-  isGroup: true,
-  children: [
-    {
-      label: "Integrator Management",
-      route: "/plmn/clc/integrator-management",
-      icon: "card",
-      children: [
-        { label: "Manage Integrators", route: "/plmn/clc/integrator-management/manage-integrators" },
-        { label: "Add Integrators Amount", route: "/plmn/clc/integrator-management/add-integrators-amount" },
-        { label: "Map Integrate Users", route: "/plmn/clc/integrator-management/map-integrate-users" },
-        { label: "Assign SIMS", route: "/plmn/clc/integrator-management/assign-sims" },
-        { label: "Manage Tariff Packs", route: "/plmn/clc/integrator-management/manage-tariff-packs" },
-        { label: "Assign Vouchers", route: "/plmn/clc/integrator-management/assign-vouchers" },
-      ],
-    },
-  ],
-},
-
-{
-  label: "Inventory Management",
-  isGroup: true,
-  children: [
-    { label: "Upload MSISDN", route: "/plmn/clc/upload-msisdn" },
-    { label: "Manage Inventory Type", route: "/plmn/clc/manage-inventory-type" },
-     { label: "Inventory Upload", route: "/plmn/clc/inventory-upload" },
-    { label: "Upload PUK", route: "/plmn/clc/upload-puk" },
-     { label: "Inventory Upload Status", route: "/plmn/clc/inventory-status" },
-   // { label: "Inventory Status", route: "/plmn/clc/inventory-status" },
-    // { label: "Extract SIM Details", route: "/plmn/clc/extract-sim-details" },
-    { label: "Triplet Association", route: "/plmn/clc/triplet-association" },
-    { label: "Triplet Association View", route: "/plmn/clc/triplet-association-view" },
-    { label: "Location Bulk Upload", route: "/plmn/clc/location-bulk-upload" },
-    { label: "Upload Fancy MSISDN", route: "/plmn/clc/upload-fancy-msisdn" },
-  ],
-  },
-  ],
-},
     {
         id: "CMS",
         label: "Customer Management",
@@ -280,7 +280,7 @@ export const PLMN_TABS = [
 function ChevronDown({ open }) {
     return (
         <svg viewBox="0 0 16 16" fill="none" width="14" height="14"
-            style={{ transform: open ? "rotate(180deg)" : "rotate(0deg)", transition: "transform 0.2s ease", flexShrink: 0 }}>
+             style={{ transform: open ? "rotate(180deg)" : "rotate(0deg)", transition: "transform 0.2s ease", flexShrink: 0 }}>
             <path d="M4 6l4 4 4-4" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
         </svg>
     );
@@ -289,7 +289,7 @@ function ChevronDown({ open }) {
 function ChevronRight({ open }) {
     return (
         <svg viewBox="0 0 16 16" fill="none" width="13" height="13"
-            style={{ transform: open ? "rotate(90deg)" : "rotate(0deg)", transition: "transform 0.2s ease", flexShrink: 0 }}>
+             style={{ transform: open ? "rotate(90deg)" : "rotate(0deg)", transition: "transform 0.2s ease", flexShrink: 0 }}>
             <path d="M6 4l4 4-4 4" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
         </svg>
     );
